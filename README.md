@@ -5,11 +5,33 @@ Single-page portfolio: hero with halo, Projects carousel, About timeline and Ide
 ## Structure
 
 ```
-index.html        → the whole site
-support.js        → runtime (loads React from unpkg)
-assets/           → photos, icons and favicon
-.nojekyll         → tells GitHub Pages to serve files as-is
+index.html        → the whole site (icons are inlined as data URIs)
+support.js        → runtime that renders the page with React
+assets/fonts/     → Inter (variable, Latin subset), self-hosted — no Google Fonts
+assets/vendor/    → React + ReactDOM 18.3.1 (see below)
+assets/           → photos, favicon and share image (og.jpg)
+robots.txt        → lets search engines crawl the site
+sitemap.xml       → page list for Google Search Console
+vercel.json       → security headers and cache rules
 ```
+
+## React files (one-time step)
+
+The page loads React from this site. Download these two files and save them in `assets/vendor/` with exactly these names:
+
+| Download | Save as |
+|---|---|
+| https://unpkg.com/react@18.3.1/umd/react.production.min.js | `react-18.3.1.production.min.js` |
+| https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js | `react-dom-18.3.1.production.min.js` |
+
+The `<script>` tags carry an integrity hash, so a wrong or corrupted file is rejected. If the files are missing or rejected, `support.js` falls back to unpkg automatically — the site keeps working either way.
+
+## Caching
+
+Fonts, React, `support.js` and the photos are cached for a year. When you replace one of them, change its URL so visitors get the new version:
+
+- Photos: bump `?v=2` → `?v=3` in `index.html`.
+- `support.js`: bump `support.js?v=2` in `index.html`.
 
 ## Ideas box (Web3Forms)
 
@@ -17,7 +39,7 @@ The form posts to Web3Forms with the access key set in `index.html` (search for 
 
 ### Spam protection (hCaptcha)
 
-The form renders hCaptcha with Web3Forms' free sitekey and sends the `h-captcha-response` token with every submission — no extra setup needed. hCaptcha won't load from `file://`; test it on GitHub Pages or a local server.
+The form renders hCaptcha with Web3Forms' free sitekey and sends the `h-captcha-response` token with every submission — no extra setup needed. hCaptcha won't load from `file://`; test it on a local server or the deployed site.
 
 ## Local preview
 
