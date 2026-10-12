@@ -15,16 +15,13 @@ sitemap.xml       → page list for Google Search Console
 vercel.json       → security headers and cache rules
 ```
 
-## React files (one-time step)
+## React files
 
-The page loads React from this site. Download these two files and save them in `assets/vendor/` with exactly these names:
+`assets/vendor/` holds the official React and ReactDOM 18.3.1 production builds (from unpkg). The `<script>` tags carry their integrity hashes, so a wrong or corrupted file is rejected; if that ever happens, `support.js` falls back to unpkg automatically.
 
-| Download | Save as |
-|---|---|
-| https://unpkg.com/react@18.3.1/umd/react.production.min.js | `react-18.3.1.production.min.js` |
-| https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js | `react-dom-18.3.1.production.min.js` |
+## Icons
 
-The `<script>` tags carry an integrity hash, so a wrong or corrupted file is rejected. If the files are missing or rejected, `support.js` falls back to unpkg automatically — the site keeps working either way.
+Icons are inlined in `index.html` as SVG data URIs. Inside them `viewBox` is written as `view%42ox`: the runtime rewrites camelCase attribute names it finds in the template, and the encoded form keeps it from breaking the icons. Browsers decode it back to `viewBox`.
 
 ## Caching
 
