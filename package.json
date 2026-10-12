@@ -2,7 +2,7 @@
   "name": "santiago-portfolio",
   "private": true,
   "version": "1.0.0",
-  "description": "Portfolio of Santiago López Viñao — static site",
+  "description": "Portfolio of Santiago Lopez Viñao — static site",
   "scripts": {},
   "dependencies": {
     "@vercel/speed-insights": "^1.2.0"

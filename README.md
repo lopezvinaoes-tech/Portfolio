@@ -1,4 +1,4 @@
-# Santiago López Viñao — Portfolio
+# Santiago Lopez Viñao — Portfolio
 
 Single-page portfolio: hero with halo, Projects carousel, About timeline and Ideas box (Web3Forms).
 
