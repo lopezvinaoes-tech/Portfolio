@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Santiago López Viñao — Coding Student</title>
 <meta name="description" content="Portfolio of Santiago López Viñao, coding student based in Barcelona. Projects, timeline and ideas box.">
 <meta name="theme-color" content="#000000">
+<link rel="canonical" href="https://portfolio-six-flax-48.vercel.app/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://portfolio-six-flax-48.vercel.app/">
 <meta property="og:title" content="Santiago López Viñao — Coding Student">
-<meta property="og:description" content="Projects, timeline and ideas box.">
-<meta property="og:image" content="assets/og.jpg">
+<meta property="og:description" content="Coding student in Barcelona studying multiplatform &amp; web app development (DAM/DAW). Available to hire.">
+<meta property="og:image" content="https://portfolio-six-flax-48.vercel.app/assets/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="preconnect" href="https://unpkg.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,6 +35,7 @@ html,body{margin:0;background:#000;-webkit-font-smoothing:antialiased}
 a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
 @keyframes haloSpin{to{transform:rotate(360deg)}}
 @keyframes haloBreath{0%,100%{opacity:.75;transform:scale(1)}50%{opacity:1;transform:scale(1.015)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}}
 </style>
 </helmet>
 <div ref="{{ rWrap }}" style="position:relative;height:900vh;background:#000;font-family:Inter,system-ui,sans-serif;letter-spacing:-0.05em;color:#f5f5f7">
@@ -65,7 +70,7 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
             </span>
             <img src="assets/icons/arrow-up-right.svg" alt="" style="margin-left:auto;width:12px;height:12px;flex:none">
           </a>
-          <a href="mailto:Lopezvinaoes@gmail.com" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;color:#f5f5f7" style-hover="background:rgba(255,255,255,0.08)">
+          <a href="mailto:lopezvinaoes@gmail.com" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;color:#f5f5f7" style-hover="background:rgba(255,255,255,0.08)">
             <span style="flex:none;display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.08)"><img src="assets/icons/mail.svg" alt="" style="width:16px;height:16px;display:block"></span>
             <span style="display:flex;flex-direction:column;min-width:0">
               <span style="font-size:14px;font-weight:600;letter-spacing:-0.02em;color:#f5f5f7">Email</span>
@@ -106,7 +111,7 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
               <img src="assets/icons/github.svg" alt="" style="width:18px;height:18px">
               <span style="color:#f5f5f7">GitHub</span>
             </a>
-            <a href="mailto:Lopezvinaoes@gmail.com" onClick="{{ closeMenu }}" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;height:72px;border-radius:16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);color:#f5f5f7;font-size:13px;font-weight:500;letter-spacing:-0.02em" style-hover="background:rgba(255,255,255,0.1)">
+            <a href="mailto:lopezvinaoes@gmail.com" onClick="{{ closeMenu }}" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;height:72px;border-radius:16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);color:#f5f5f7;font-size:13px;font-weight:500;letter-spacing:-0.02em" style-hover="background:rgba(255,255,255,0.1)">
               <img src="assets/icons/mail.svg" alt="" style="width:18px;height:18px">
               <span style="color:#f5f5f7">Email</span>
             </a>
@@ -134,11 +139,11 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
 
   <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
     <div ref="{{ rLeft }}" style="position:absolute;left:clamp(20px,4vw,56px);top:50%;transform:translateY(-50%);z-index:3;display:flex;flex-direction:column;gap:14px">
-      <span style="font-size: 23px; font-weight: 500; letter-spacing: -0.01em; color: #86868b">I`am</span>
+      <span style="font-size: 23px; font-weight: 500; letter-spacing: -0.01em; color: #86868b">I am</span>
       <h1 style="margin:0;font-size:clamp(44px,5.4vw,88px);line-height:0.95;font-weight:600;letter-spacing:-0.05em"><span style="color:oklch(0.8 0.2 152);text-shadow:0 0 18px oklch(0.8 0.2 152 / 0.55), 0 0 48px oklch(0.8 0.2 152 / 0.3)">Coding</span><br><span style="color:#86868b">Student.</span></h1>
     </div>
     <div ref="{{ rRight }}" style="position:absolute;right:clamp(20px,4vw,56px);top:50%;transform:translateY(-50%);z-index:3;text-align:right;display:flex;flex-direction:column;gap:14px;align-items:flex-end">
-      <span style="font-size:13px;font-weight:500;letter-spacing:-0.01em;color:#86868b"><br></span><h2 style="margin: 0; font-size: clamp(33px,4.4vw,88px); line-height: 0.95; font-weight: 600; letter-spacing: -0.05em; font-style: normal">Santiago<br><span style="color: #86868b; font-size: 56px">Lopez V.</span></h2>
+      <span style="font-size:13px;font-weight:500;letter-spacing:-0.01em;color:#86868b"><br></span><h2 style="margin: 0; font-size: clamp(33px,4.4vw,88px); line-height: 0.95; font-weight: 600; letter-spacing: -0.05em; font-style: normal">Santiago<br><span style="color: #86868b; font-size: 0.89em">López V.</span></h2>
     </div>
   </sc-if>
   <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
@@ -149,13 +154,13 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
   </sc-if>
 
   <div ref="{{ rToggle }}" style="position:absolute;right:clamp(20px,4vw,56px);bottom:clamp(30px,7vh,74px);z-index:5">
-    <button onClick="{{ toggleVisor }}" aria-label="Visor" aria-pressed="{{ visor }}" title="{{ visorTitle }}" style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border-radius:50%;cursor:pointer;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:background .3s, border-color .3s, box-shadow .3s, transform .2s;background:{{ visorBg }};border:1px solid {{ visorBd }};box-shadow:{{ visorGlow }}" style-hover="transform:scale(1.06)" style-active="transform:scale(0.96)">
+    <button onClick="{{ toggleVisor }}" aria-label="Toggle visor" aria-pressed="{{ visor }}" title="{{ visorTitle }}" style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border-radius:50%;cursor:pointer;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:background .3s, border-color .3s, box-shadow .3s, transform .2s;background:{{ visorBg }};border:1px solid {{ visorBd }};box-shadow:{{ visorGlow }}" style-hover="transform:scale(1.06)" style-active="transform:scale(0.96)">
       <span style="display:block;width:22px;height:22px;-webkit-mask:url(assets/icons/glasses.svg) center/contain no-repeat;mask:url(assets/icons/glasses.svg) center/contain no-repeat;transition:background .3s;background:{{ visorFg }}"></span>
     </button>
   </div>
 <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
     <div ref="{{ rCta }}" style="position:absolute;left:0;right:0;bottom:clamp(28px,7vh,72px);z-index:4;pointer-events:none;display:flex;justify-content:center">
-    <a href="mailto:Lopezvinaoes@gmail.com" style="pointer-events:auto;display:flex;align-items:center;gap:10px;height:48px;padding:0 22px 0 26px;border-radius:999px;background:#f5f5f7;color:#000;font-size:16px;font-weight:500;letter-spacing:-0.03em;box-shadow:0 10px 40px rgba(0,0,0,0.5)" style-hover="background:#fff;transform:scale(1.03)" style-active="transform:scale(0.98)">
+    <a href="mailto:lopezvinaoes@gmail.com" style="pointer-events:auto;display:flex;align-items:center;gap:10px;height:48px;padding:0 22px 0 26px;border-radius:999px;background:#f5f5f7;color:#000;font-size:16px;font-weight:500;letter-spacing:-0.03em;box-shadow:0 10px 40px rgba(0,0,0,0.5)" style-hover="background:#fff;transform:scale(1.03)" style-active="transform:scale(0.98)">
       <span style="color:#000">Contact me</span>
       <span style="display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#000;color:#fff;font-size:13px;letter-spacing:0">→</span>
     </a>
@@ -181,11 +186,11 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
   </div>
 
   <div ref="{{ rCtrl }}" style="position:absolute;left:0;right:0;bottom:clamp(28px,7vh,72px);z-index:4;display:flex;justify-content:center;align-items:center;gap:18px;opacity:0;visibility:hidden">
-    <button ref="{{ rPrev }}" onClick="{{ prev }}" aria-label="Anterior" style="width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:#f5f5f7;font:500 16px Inter,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)" style-hover="background:rgba(255,255,255,0.14)">←</button>
+    <button ref="{{ rPrev }}" onClick="{{ prev }}" aria-label="Previous project" style="width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:#f5f5f7;font:500 16px Inter,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)" style-hover="background:rgba(255,255,255,0.14)">←</button>
     <div style="position:relative;width:120px;height:3px;border-radius:2px;background:rgba(255,255,255,0.14);overflow:hidden">
       <div ref="{{ rThumb }}" style="position:absolute;left:0;top:0;bottom:0;width:60px;border-radius:2px;background:#f5f5f7"></div>
     </div>
-    <button ref="{{ rNext }}" onClick="{{ next }}" aria-label="Siguiente" style="width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:#f5f5f7;font:500 16px Inter,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)" style-hover="background:rgba(255,255,255,0.14)">→</button>
+    <button ref="{{ rNext }}" onClick="{{ next }}" aria-label="Next project" style="width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:#f5f5f7;font:500 16px Inter,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)" style-hover="background:rgba(255,255,255,0.14)">→</button>
   </div>
 
   <div ref="{{ rTlFade }}" style="position:absolute;inset:0;z-index:5;pointer-events:none;opacity:0;background:linear-gradient(to bottom, #000 0px, rgba(0,0,0,0) 150px, rgba(0,0,0,0) calc(100% - 120px), #000 100%)"></div>
@@ -303,7 +308,7 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
       <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px">
         <a href="https://www.linkedin.com/in/santiago-lopez-vi%C3%B1ao/" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;height:40px;padding:0 16px 0 12px;border-radius:999px;border:1px solid #d2d2d7;color:#1d1d1f;font-size:14px;font-weight:500;letter-spacing:-0.02em" style-hover="background:#f5f5f7;color:#1d1d1f"><img src="assets/icons/linkedin.svg" alt="" style="width:15px;height:15px;filter:invert(1)"><span style="color:#1d1d1f">LinkedIn</span></a>
         <a href="https://github.com/lopezvinaoes-tech" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;height:40px;padding:0 16px 0 12px;border-radius:999px;border:1px solid #d2d2d7;color:#1d1d1f;font-size:14px;font-weight:500;letter-spacing:-0.02em" style-hover="background:#f5f5f7;color:#1d1d1f"><img src="assets/icons/github.svg" alt="" style="width:15px;height:15px;filter:invert(1)"><span style="color:#1d1d1f">GitHub</span></a>
-        <a href="mailto:Lopezvinaoes@gmail.com" style="display:flex;align-items:center;gap:8px;height:40px;padding:0 16px 0 12px;border-radius:999px;border:1px solid #d2d2d7;color:#1d1d1f;font-size:14px;font-weight:500;letter-spacing:-0.02em" style-hover="background:#f5f5f7;color:#1d1d1f"><img src="assets/icons/mail.svg" alt="" style="width:15px;height:15px;filter:invert(1)"><span style="color:#1d1d1f">Email</span></a>
+        <a href="mailto:lopezvinaoes@gmail.com" style="display:flex;align-items:center;gap:8px;height:40px;padding:0 16px 0 12px;border-radius:999px;border:1px solid #d2d2d7;color:#1d1d1f;font-size:14px;font-weight:500;letter-spacing:-0.02em" style-hover="background:#f5f5f7;color:#1d1d1f"><img src="assets/icons/mail.svg" alt="" style="width:15px;height:15px;filter:invert(1)"><span style="color:#1d1d1f">Email</span></a>
       </div>
     </div>
     <div style="background:#f5f5f7;border-radius:28px;padding:clamp(22px,3vw,36px);box-sizing:border-box">
@@ -319,7 +324,7 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
           </div>
           <label style="display:flex;flex-direction:column;gap:8px">
             <span style="font-size:13px;font-weight:500;letter-spacing:-0.01em;color:#6e6e73">Your idea</span>
-            <textarea value="{{ idea }}" onChange="{{ onIdea }}" rows="5" placeholder="Describe your idea, project or challenge…" style="width:100%;box-sizing:border-box;height:50px;padding:0 16px;border-radius:14px;border:1px solid #d2d2d7;background:#fff;color:#1d1d1f;font:400 16px Inter,system-ui,sans-serif;letter-spacing:-0.02em;outline:none;transition:border-color .2s, box-shadow .2s;height:auto;min-height:140px;padding:14px 16px;line-height:1.45;resize:vertical" style-focus="border-color:oklch(0.62 0.17 152);box-shadow:0 0 0 4px oklch(0.8 0.2 152 / 0.18)"></textarea>
+            <textarea value="{{ idea }}" onChange="{{ onIdea }}" rows="5" maxlength="4000" placeholder="Describe your idea, project or challenge…" style="width:100%;box-sizing:border-box;border-radius:14px;border:1px solid #d2d2d7;background:#fff;color:#1d1d1f;font:400 16px Inter,system-ui,sans-serif;letter-spacing:-0.02em;outline:none;transition:border-color .2s, box-shadow .2s;height:auto;min-height:140px;padding:14px 16px;line-height:1.45;resize:vertical" style-focus="border-color:oklch(0.62 0.17 152);box-shadow:0 0 0 4px oklch(0.8 0.2 152 / 0.18)"></textarea>
           </label>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:12px">
             <label style="display:flex;flex-direction:column;gap:8px">
@@ -355,7 +360,7 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
       </sc-if>
     </div>
   </div>
-  <footer style="max-width:1120px;margin:clamp(64px,12vh,120px) auto 0;padding-top:22px;border-top:1px solid #e5e5ea;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:13px;font-weight:500;letter-spacing:-0.01em;color:#86868b">
+  <footer style="max-width:1120px;margin:clamp(64px,12vh,120px) auto 0;padding-top:22px;border-top:1px solid #e5e5ea;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:13px;font-weight:500;letter-spacing:-0.01em;color:#6e6e73">
     <span>© 2026 Santiago López Viñao</span>
     <span>Barcelona, Spain</span>
   </footer>
@@ -429,6 +434,7 @@ class Component extends DCLogic {
     window.removeEventListener('keydown', this.onKey);
     window.removeEventListener('pointermove', this.onMove);
     window.removeEventListener('pointerup', this.onUp);
+    window.removeEventListener('pointercancel', this.onUp);
     if (this.capIO) this.capIO.disconnect(); cancelAnimationFrame(this.raf); cancelAnimationFrame(this.navRaf); clearTimeout(this.wt); clearTimeout(this.ct); clearTimeout(this.snapT); clearTimeout(this.hSet); if (this.ro) this.ro.disconnect();
     window.removeEventListener('touchstart', this.onTS);
     window.removeEventListener('touchend', this.onTE);
