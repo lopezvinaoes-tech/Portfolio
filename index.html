@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-page-lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -7,11 +7,18 @@
 <meta name="description" content="Portfolio of Santiago Lopez Viñao, coding student based in Barcelona. Projects, timeline and ideas box.">
 <meta name="theme-color" content="#000000">
 <link rel="canonical" href="https://portfolio-six-flax-48.vercel.app/">
+<link rel="alternate" hreflang="en" href="https://portfolio-six-flax-48.vercel.app/">
+<link rel="alternate" hreflang="es" href="https://portfolio-six-flax-48.vercel.app/es/">
+<link rel="alternate" hreflang="x-default" href="https://portfolio-six-flax-48.vercel.app/">
 <meta property="og:type" content="website">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="es_ES">
 <meta property="og:url" content="https://portfolio-six-flax-48.vercel.app/">
 <meta property="og:title" content="Santiago Lopez Viñao — Coding Student">
 <meta property="og:description" content="Coding student in Barcelona studying multiplatform &amp; web app development (DAM/DAW). Available to hire.">
 <meta property="og:image" content="https://portfolio-six-flax-48.vercel.app/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-latin-var.woff2" crossorigin>
 <link rel="preload" as="image" type="image/webp" href="assets/person-novisor-960.webp?v=2" imagesrcset="assets/person-novisor-640.webp?v=2 640w, assets/person-novisor-960.webp?v=2 960w" imagesizes="(max-width: 820px) 80vw, 80vh" fetchpriority="high">
@@ -31,6 +38,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
 <!-- Vercel Speed Insights (static HTML version of @vercel/speed-insights) -->
 <script>window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };</script>
 <script defer src="/_vercel/speed-insights/script.js"></script>
+<!-- Vercel Web Analytics (cookie-free). Enable it in the Vercel project: Analytics → Enable -->
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 <noscript>
@@ -378,6 +388,7 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
             <span>{{ sendLabel }}</span>
             <span style="display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:oklch(0.8 0.2 152);color:#000;font-size:13px;letter-spacing:0">→</span>
           </button>
+          <p style="margin:0;max-width:420px;font-size:12.5px;line-height:1.45;letter-spacing:-0.01em;color:#86868b;text-wrap:pretty">{{ t.privacy }}</p>
         </form>
       </sc-if>
       <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
@@ -444,6 +455,7 @@ class Component extends DCLogic {
       send: 'Send idea', sending: 'Sending…',
       thanks: 'Thank you', onItsWay: "Your idea is on its way. I'll get back to you soon.", sendAnother: 'Send another idea',
       location: 'Barcelona, Spain',
+      privacy: "I'll only use your details to reply to you. The form is sent through Web3Forms and protected by hCaptcha.",
       err: {
         idea: 'Tell me a little about your idea first.', name: 'Please add your name.',
         email: "That email doesn't look right.", captcha: 'Please complete the captcha.',
@@ -486,6 +498,7 @@ class Component extends DCLogic {
       send: 'Enviar idea', sending: 'Enviando…',
       thanks: 'Gracias', onItsWay: 'Tu idea va de camino. Te responderé pronto.', sendAnother: 'Enviar otra idea',
       location: 'Barcelona, España',
+      privacy: 'Solo usaré tus datos para responderte. El formulario se envía a través de Web3Forms y está protegido con hCaptcha.',
       err: {
         idea: 'Cuéntame un poco tu idea primero.', name: 'Añade tu nombre, por favor.',
         email: 'Ese email no parece correcto.', captcha: 'Completa el captcha, por favor.',
@@ -495,8 +508,10 @@ class Component extends DCLogic {
     }
   };
   // Device language → 'es' for Spanish, Catalan, Galician and Basque; 'en' otherwise. A manual choice is remembered.
+  // Priority: a manual choice (remembered) → the page URL (/es/ is Spanish) → the device language
   detectLang() {
     try { const saved = localStorage.getItem('lang'); if (saved === 'en' || saved === 'es') return saved; } catch (_) {}
+    if (typeof document !== 'undefined' && document.documentElement.getAttribute('data-page-lang') === 'es') return 'es';
     const list = (typeof navigator !== 'undefined' && (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language])) || [];
     for (const l of list) {
       const base = String(l || '').toLowerCase().split('-')[0];

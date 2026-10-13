@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Page not found — Santiago Lopez Viñao</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#000000">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<style>
+@font-face{font-family:Inter;font-style:normal;font-weight:100 900;font-display:swap;src:url(/assets/fonts/inter-latin-var.woff2) format("woff2")}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#000;color:#f5f5f7;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body{display:flex;align-items:center;justify-content:center;padding:24px 16px;overflow:hidden}
+main{position:relative;text-align:center;display:flex;flex-direction:column;align-items:center;gap:18px;max-width:560px}
+.halo{position:absolute;left:50%;top:50%;width:min(78vw,78vh,560px);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;
+  border:2px solid #fff;box-shadow:0 0 10px 1px rgba(240,244,255,.9),0 0 40px 6px rgba(240,244,255,.5),0 0 120px 24px rgba(240,244,255,.25),
+  inset 0 0 10px 1px rgba(240,244,255,.9),inset 0 0 50px 8px rgba(240,244,255,.3);opacity:.55;pointer-events:none;
+  animation:breath 6s ease-in-out infinite}
+@keyframes breath{0%,100%{opacity:.4;transform:translate(-50%,-50%) scale(1)}50%{opacity:.6;transform:translate(-50%,-50%) scale(1.015)}}
+@media (prefers-reduced-motion:reduce){.halo{animation:none}}
+.code{position:relative;margin:0;font-size:clamp(88px,22vw,180px);line-height:.9;font-weight:600;letter-spacing:-.06em;
+  color:oklch(0.8 0.2 152);text-shadow:0 0 18px oklch(0.8 0.2 152 / .55),0 0 48px oklch(0.8 0.2 152 / .3)}
+h1{position:relative;margin:0;font-size:clamp(28px,5vw,44px);line-height:1.02;font-weight:600;letter-spacing:-.045em}
+h1 span{color:#86868b}
+p{position:relative;margin:0;font-size:17px;line-height:1.5;letter-spacing:-.02em;color:#a1a1a6;text-wrap:pretty}
+a.home{position:relative;margin-top:8px;display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 20px 0 24px;border-radius:999px;
+  background:#f5f5f7;color:#000;text-decoration:none;font-size:16px;font-weight:500;letter-spacing:-.03em;transition:transform .2s,background .2s}
+a.home:hover{background:#fff;transform:scale(1.03)}
+a.home:focus-visible{outline:2px solid oklch(0.8 0.2 152);outline-offset:3px}
+a.home i{display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#000;color:#fff;font-style:normal;font-size:13px}
+[data-es],a.home[data-es]{display:none}
+html[lang="es"] [data-en]{display:none}
+html[lang="es"] [data-es]{display:revert}
+html[lang="es"] a.home[data-es]{display:inline-flex}
+</style>
+<script>
+  // Same rule as the main page: a manual choice wins, then the device language
+  (function () {
+    var lang = 'en';
+    try { var s = localStorage.getItem('lang'); if (s === 'en' || s === 'es') lang = s; else throw 0; }
+    catch (_) {
+      var list = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
+      for (var i = 0; i < list.length; i++) {
+        var b = String(list[i] || '').toLowerCase().split('-')[0];
+        if (b === 'en') { lang = 'en'; break; }
+        if (b === 'es' || b === 'ca' || b === 'gl' || b === 'eu') { lang = 'es'; break; }
+      }
+    }
+    document.documentElement.lang = lang;
+    if (lang === 'es') document.title = 'Página no encontrada — Santiago Lopez Viñao';
+  })();
+</script>
+</head>
+<body>
+<main>
+  <div class="halo" aria-hidden="true"></div>
+  <p class="code" aria-hidden="true">404</p>
+  <h1 data-en>This page <span>doesn't exist.</span></h1>
+  <h1 data-es>Esta página <span>no existe.</span></h1>
+  <p data-en>The link may be broken or the page may have moved.</p>
+  <p data-es>Puede que el enlace esté roto o que la página se haya movido.</p>
+  <a class="home" href="/" data-en>Back to home <i>→</i></a>
+  <a class="home" href="/es/" data-es>Volver al inicio <i>→</i></a>
+</main>
+</body>
+</html>
