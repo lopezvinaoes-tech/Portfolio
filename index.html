@@ -1576,14 +1576,15 @@ class Component extends DCLogic {
   // ════ 12. DEVELOPER VISION (HOLOGRAMS) ═════════════════════════════════════
   // With the visor on, holograms come out of each part of the page and say what it is built with.
   // They live on one fixed layer (aria-hidden: decoration only) and follow their element every frame.
-  // Cards in a dark shade of the visor's colour at 50 % opacity (green, or red with a red halo; always green on the white sections), two at a time at most.
+  // Cards: opaque dark green (or red) on black; light green with a frosted-glass blur on the white sections.
+  // Each card looks for a free spot near its element so it never covers text; two at a time at most.
 
   HOLO_CSS = `
 .holo{position:fixed;inset:0;z-index:5;pointer-events:none;opacity:0;transition:opacity .3s ease;font-family:Inter,system-ui,sans-serif;letter-spacing:-0.01em;overflow:hidden}
 .holo.on{opacity:1}
 .holo-card,.holo-line,.holo-dot,.holo-ret{position:absolute;left:0;top:0;opacity:0;visibility:hidden;transition:opacity .25s ease,visibility 0s linear .25s;will-change:transform}
 .holo-card.show,.holo-line.show,.holo-dot.show,.holo-ret.show{opacity:1;visibility:visible;transition:opacity .35s ease}
-.holo-in{max-width:236px;padding:10px 13px 11px;border-radius:12px;box-sizing:border-box;background:color-mix(in srgb, color-mix(in oklch, oklch(var(--acc)) 45%, #000) 50%, transparent);border:1px solid oklch(var(--acc) / .5);color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.35);translate:0 5px;transition:translate .35s cubic-bezier(.2,.8,.2,1)}
+.holo-in{max-width:236px;padding:10px 13px 11px;border-radius:12px;box-sizing:border-box;background:color-mix(in oklch, oklch(var(--acc)) 45%, #000);border:1px solid oklch(var(--acc) / .5);color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.35);translate:0 5px;transition:translate .35s cubic-bezier(.2,.8,.2,1)}
 .show>.holo-in{translate:0 0}
 .holo-tag{display:flex;align-items:center;gap:7px;font:700 10px/1.3 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.07em;text-transform:uppercase;color:#fff}
 .holo-tag::before{content:"";flex:none;width:6px;height:6px;border-radius:2px;background:currentColor}
@@ -1593,20 +1594,22 @@ class Component extends DCLogic {
 .holo-line{height:1px;transform-origin:0 50%;background:oklch(var(--acc) / .55)}
 .holo-dot{width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:oklch(var(--acc))}
 .holo-light{--acc:0.8 0.2 152;--acc-hi:0.62 0.17 152;--acc-lo:0.62 0.17 152;--acc-lo2:0.55 0.15 152}
-.holo-light .holo-in{color:#06210f;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+.holo-light .holo-in{background:oklch(var(--acc) / .35);border-color:oklch(var(--acc) / .6);color:#06210f;box-shadow:0 10px 30px rgba(0,0,0,.08);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .holo-light .holo-tag{color:#06210f}
 .holo-light .holo-fun{color:rgba(6,33,15,.75)}
 .holo-light.holo-hud b{color:#06210f}
 .holo-ret i{position:absolute;width:16px;height:16px;border:1.5px solid oklch(var(--acc) / .85)}
 .holo-ret i:nth-child(1){left:0;top:0;border-right:0;border-bottom:0}.holo-ret i:nth-child(2){right:0;top:0;border-left:0;border-bottom:0}
 .holo-ret i:nth-child(3){left:0;bottom:0;border-right:0;border-top:0}.holo-ret i:nth-child(4){right:0;bottom:0;border-left:0;border-top:0}
-.holo-lbl{position:absolute;right:calc(100% + 10px);bottom:0;padding:6px 9px;border-radius:8px;background:color-mix(in srgb, color-mix(in oklch, oklch(var(--acc)) 45%, #000) 50%, transparent);border:1px solid oklch(var(--acc) / .5);font:600 10px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.06em;text-transform:uppercase;color:#e8e8ed;white-space:nowrap;text-align:left}
+.holo-lbl{position:absolute;right:calc(100% + 10px);bottom:0;padding:6px 9px;border-radius:8px;background:color-mix(in oklch, oklch(var(--acc)) 45%, #000);border:1px solid oklch(var(--acc) / .5);font:600 10px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.06em;text-transform:uppercase;color:#e8e8ed;white-space:nowrap;text-align:left}
 .holo-lbl b{color:#fff;font-weight:700}
 .lbl-right .holo-lbl{right:auto;left:calc(100% + 10px)}
 .lbl-below .holo-lbl{right:auto;left:0;bottom:auto;top:calc(100% + 8px)}
 .holo-hud .holo-in{min-width:160px;font:500 11px/1.65 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 .holo-hud b{float:right;font-weight:700;color:#fff;font-variant-numeric:tabular-nums}
-.holo-narrow .holo-in{max-width:calc(100vw - 130px)} /* leaves room for the visor and colour buttons */
+.holo-narrow .holo-in{max-width:min(70vw,250px);padding:8px 10px 9px}
+.holo-narrow .holo-txt{font-size:11.5px;margin-top:4px}
+.holo-narrow .holo-fun{font-size:11px;margin-top:3px}
 `;
 
   holoDefs() {
@@ -1697,6 +1700,36 @@ class Component extends DCLogic {
     return o;
   }
 
+  // Boxes of the texts (and form fields) currently on screen: the cards must not cover them
+  holoTextBoxes(W, VH) {
+    const E = this.el, H = this.hv, out = [], seen = new Set();
+    const washed = E.white && +(E.white.style.opacity || 0) > 0.5;
+    const visible = el => {
+      if (washed && E.stage && E.stage.contains(el) && !(E.outro && E.outro.contains(el)) && !(E.header && E.header.contains(el))) return false; // under the white wash
+      let o = 1;
+      for (let n = el; n && n !== document.body; n = n.parentElement) {
+        const st = n.style;
+        if (st.visibility === 'hidden' || st.display === 'none') return false;
+        if (st.opacity !== '') o *= +st.opacity;
+      }
+      return o > 0.25;
+    };
+    const add = el => {
+      if (!el || seen.has(el) || H.layer.contains(el)) return;
+      seen.add(el);
+      if (!visible(el)) return;
+      for (const b of el.getClientRects())
+        if (b.width && b.bottom > 0 && b.top < VH && b.right > 0 && b.left < W && b.width * b.height < W * VH * 0.4) out.push({ x: b.left - 6, y: b.top - 4, w: b.width + 12, h: b.height + 8 });
+    };
+    const tw = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    for (let n; (n = tw.nextNode());) {
+      const p = n.parentElement;
+      if (p && n.data.trim() && !/^(SCRIPT|STYLE|NOSCRIPT|X-DC)$/.test(p.tagName)) add(p);
+    }
+    document.querySelectorAll('input:not([type=hidden]),textarea,iframe').forEach(add);
+    return out;
+  }
+
   holoTick(now) {
     const H = this.hv, E = this.el;
     const dt = H.last ? (now - H.last) / 1000 : 0; H.last = now;
@@ -1726,12 +1759,15 @@ class Component extends DCLogic {
     for (const it of items) if (!H.active.includes(it.d.id)) it.d.vis = false;
     items = items.filter(it => H.active.includes(it.d.id));
 
-    // 2 · Place each card on the side of its element with the most room, avoiding the others
-    const placed = [], G = narrow ? 20 : 34;
-    // Texts the cards should not cover (computers); on a phone the card sits at the bottom left instead
-    const obst = narrow ? [] : [E.left, E.right, E.cta, E.toggle, E.header].filter(n => n && n.style.visibility !== 'hidden' && +(n.style.opacity || 1) > 0.3)
-      .map(n => { const b = n.getBoundingClientRect(); return { x: b.left, y: b.top, w: b.width, h: b.height }; });
+    // 2 · Place each card near its element, in a spot with no text under it (the text boxes are refreshed every 150 ms)
+    const G = narrow ? 16 : 30, placed = [];
+    if (!H.obst || now - H.obstAt > 150) {
+      H.obstAt = now;
+      H.obst = this.holoTextBoxes(W, VH);
+      for (const n of [E.toggle, H.hudOn && H.hud]) if (n) { const b = n.getBoundingClientRect(); if (b.width) H.obst.push({ x: b.left - 6, y: b.top - 6, w: b.width + 12, h: b.height + 12 }); }
+    }
     const area = (a, b) => Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x)) * Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y));
+    const cover = (b, list) => { let t = 0; for (const o of list) t += area(b, o); return t; };
     let faceBox = null;
     for (const { d, r } of items) {
       let A = { left: r.left, top: r.top, right: r.right, bottom: r.bottom, width: r.width, height: r.height };
@@ -1740,20 +1776,36 @@ class Component extends DCLogic {
         A = { left: fx, top: fy, right: fx + fw, bottom: fy + fh, width: fw, height: fh }; faceBox = A;
       }
       if (d.line) { const y = Math.min(r.bottom - 20, Math.max(r.top + 20, VH * 0.42)); A = { left: r.left, right: r.right, top: y, bottom: y, width: r.width, height: 0 }; }
-      const w = d.w, h = d.h, cx = A.left + A.width / 2, cy = A.top + A.height / 2;
-      const yMid = d.round ? A.top + A.height * 0.28 - h / 2 : cy - h / 2;
-      const at = side => side === 'right' ? { x: A.right + G, y: yMid } : side === 'left' ? { x: A.left - G - w, y: yMid }
-        : side === 'top' ? { x: cx - w / 2, y: A.top - G - h } : { x: cx - w / 2, y: A.bottom + G };
+      const w = d.w, h = d.h;
+      const inView = b => b.x >= 8 && b.y >= top && b.x + w <= W - 8 && b.y + h <= VH - 8;
+      const gap = b => Math.hypot(Math.max(0, A.left - (b.x + w), b.x - A.right), Math.max(0, A.top - (b.y + h), b.y - A.bottom)); // card ↔ element
+      const own = { x: A.left, y: A.top, w: A.width, h: A.height };
+      const score = b => cover(b, H.obst) * 4 + cover(b, placed) * 50 + (d.face || d.round ? 0 : area(b, own) * 2) + gap(b) + (gap(b) < G * 0.6 ? 40 : 0);
+      // Keep the current spot while it is still free; otherwise look for a new one
       let best = null;
-      if (narrow) best = { x: 12, y: VH - h - 16, w, h };
-      else for (const side of [...d.sides, 'right', 'left', 'bottom', 'top']) {
-        const c = at(side), x = Math.min(W - 12 - w, Math.max(12, c.x)), y = Math.min(VH - 12 - h, Math.max(top, c.y));
-        const box = { x, y, w, h };
-        let score = Math.abs(x - c.x) + Math.abs(y - c.y);
-        for (const o of placed) score += area(box, o) * 0.05;
-        for (const o of obst) score += area(box, o) * 0.03;
-        if (!d.face && !d.round) score += area(box, { x: A.left, y: A.top, w: A.width, h: A.height }) * 0.02;
-        if (!best || score < best.score) best = { ...box, score };
+      if (d.rel) {
+        const b = { x: A.left + d.rel.x, y: A.top + d.rel.y, w, h };
+        if (inView(b) && cover(b, H.obst) < 1 && cover(b, placed) < 1 && gap(b) < (narrow ? 420 : 520)) best = b;
+        else if (now - (d.searchAt || 0) < 120) best = { x: Math.min(W - 8 - w, Math.max(8, b.x)), y: Math.min(VH - 8 - h, Math.max(top, b.y)), w, h };
+      }
+      if (!best) {
+        d.searchAt = now;
+        let bs = Infinity;
+        const tryBox = (x, y) => {
+          x = Math.min(W - 8 - w, Math.max(8, x)); y = Math.min(VH - 8 - h, Math.max(top, y));
+          const b = { x, y, w, h }, sc = score(b);
+          if (sc < bs) { bs = sc; best = b; }
+        };
+        const cx = A.left + A.width / 2, cy = A.top + A.height / 2;
+        for (const g of [G, G + 50, G + 120]) { // around the element first
+          for (const f of [-0.5, 0, 0.5]) {
+            tryBox(A.right + g, cy - h / 2 + f * h); tryBox(A.left - g - w, cy - h / 2 + f * h);
+            tryBox(cx - w / 2 + f * w, A.bottom + g); tryBox(cx - w / 2 + f * w, A.top - g - h);
+          }
+        }
+        const step = narrow ? 18 : 26; // then anywhere on screen
+        for (let y = top; y <= VH - 8 - h; y += step) for (let x = 8; x <= W - 8 - w; x += step) tryBox(x, y);
+        d.rel = { x: best.x - A.left, y: best.y - A.top };
       }
       placed.push(best);
       // Anchor point: on the ring for the halo, otherwise the point of the element nearest to the card
