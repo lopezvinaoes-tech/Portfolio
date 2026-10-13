@@ -39,7 +39,8 @@ The file is split into labelled blocks (search for `══` / `──` comments)
 | 7. Navigation | animated scroll for header links |
 | 8. Projects carousel | arrows, keyboard, drag, wheel |
 | 9. Ideas box form | hCaptcha, validation, Web3Forms |
-| 10. Template values | `renderVals()` — everything the template reads |
+| 10. Name: jump and explosion | click the name to make it jump; three clicks in a row blow the letters apart; they lie at the bottom of the screen, fly up when the page scrolls and fall again |
+| 11. Template values | `renderVals()` — everything the template reads |
 
 ## Languages (EN / ES)
 

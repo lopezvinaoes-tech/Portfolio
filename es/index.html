@@ -260,13 +260,13 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
       <p style="margin:0;position:relative;top:{{ t.heroTop }};font-size:{{ t.heroSize }};line-height:{{ t.heroLh }};font-weight:600;letter-spacing:-0.05em"><span style="color:oklch(var(--acc));text-shadow:0 0 18px oklch(var(--acc) / 0.55), 0 0 48px oklch(var(--acc) / 0.3)">{{ t.heroA }}</span><br><span style="color:#86868b">{{ t.heroB }}</span></p>
     </div>
     <div ref="{{ rRight }}" style="position:absolute;right:clamp(20px,4vw,56px);top:50%;transform:translateY(-50%);z-index:3;text-align:right;display:flex;flex-direction:column;gap:14px;align-items:flex-end">
-      <span style="font-size:13px;font-weight:500;letter-spacing:-0.01em;color:#86868b"><br></span><h1 style="margin: 0; font-size: clamp(33px,4.4vw,88px); line-height: 0.95; font-weight: 600; letter-spacing: -0.05em; font-style: normal">Santiago<br><span style="color: #86868b; font-size: 0.89em">Lopez V.</span></h1>
+      <span style="font-size:13px;font-weight:500;letter-spacing:-0.01em;color:#86868b"><br></span><h1 onClick="{{ nameTap }}" style="margin: 0; font-size: clamp(33px,4.4vw,88px); line-height: 0.95; font-weight: 600; letter-spacing: -0.05em; font-style: normal; opacity: {{ nameOp }}; cursor:pointer; user-select:none; -webkit-user-select:none; touch-action:manipulation; -webkit-tap-highlight-color:transparent">Santiago<br><span style="color: #86868b; font-size: 0.89em">Lopez V.</span></h1>
     </div>
   </sc-if>
   <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
     <div ref="{{ rNarrow }}" style="position:absolute;left:0;right:0;top:92px;z-index:3;text-align:center;display:flex;flex-direction:column;gap:6px;padding:0 20px">
       <span style="font-size:14px;font-weight:500;letter-spacing:-0.02em;color:#86868b"><span style="color:oklch(var(--acc))">{{ t.heroA }}</span> {{ t.heroBShort }}</span>
-      <h1 style="margin:0;font-size:clamp(40px,11vw,64px);line-height:0.95;font-weight:600;letter-spacing:-0.05em">Santiago <span style="color:#86868b">Lopez V.</span></h1>
+      <h1 onClick="{{ nameTap }}" style="margin:0;font-size:clamp(40px,11vw,64px);line-height:0.95;font-weight:600;letter-spacing:-0.05em;opacity:{{ nameOp }};cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent">Santiago <span style="color:#86868b">Lopez V.</span></h1>
     </div>
   </sc-if>
 
@@ -760,6 +760,8 @@ class Component extends DCLogic {
     window.removeEventListener('touchcancel', this.onTE);
     window.removeEventListener('wheel', this.onWh);
     if (this.el.layer) this.el.layer.removeEventListener('wheel', this.onWheel);
+    cancelAnimationFrame(this.boomRaf);
+    if (this.debris) { window.removeEventListener('scroll', this.onDebrisScroll); window.removeEventListener('resize', this.onDebrisResize); this.debris.layer.remove(); }
   }
 
   // ════ 6. SCROLL ENGINE ══════════════════════════════════════════════════════
@@ -1234,7 +1236,127 @@ class Component extends DCLogic {
     };
   }
 
-  // ════ 10. TEMPLATE VALUES ═══════════════════════════════════════════════════
+  // ════ 10. NAME: JUMP AND EXPLOSION ═════════════════════════════════════════
+  // Hidden detail: a click on the name makes it jump; the third click in a row blows the letters
+  // apart: they fall to the bottom of the screen and stay there until the page is reloaded. When the page
+  // scrolls they stay where they were (up in the air) and fall again. It only ever plays after a click,
+  // so it also plays when the device asks for reduced motion.
+
+  nameTap = e => {
+    const h1 = e.currentTarget;
+    if (this.boom || !h1.animate) return;
+    const now = performance.now();
+    this.taps = now - (this.tapAt || 0) < 1000 ? (this.taps || 0) + 1 : 1;
+    this.tapAt = now;
+    if (this.taps >= 3) { this.taps = 0; this.explode(h1); return; }
+    const up = this.taps === 2 ? 0.5 : 0.32; // the second jump goes higher
+    h1.style.transformOrigin = '50% 100%';
+    h1.animate([
+      { transform: 'none' },
+      { transform: 'translateY(0.04em) scale(1.04, 0.92)', offset: 0.14, easing: 'cubic-bezier(.2,.7,.4,1)' },
+      { transform: 'translateY(-' + up + 'em) scale(0.97, 1.04)', offset: 0.46, easing: 'cubic-bezier(.6,0,.85,.45)' },
+      { transform: 'translateY(0.03em) scale(1.05, 0.93)', offset: 0.8 },
+      { transform: 'none' }
+    ], { duration: 600 });
+  };
+
+  explode(h1) {
+    this.boom = true;
+    this.setState({ exploded: true }); // the name stays hidden (still readable by Google and screen readers) until the page is reloaded
+    const rnd = (a, b) => a + Math.random() * (b - a);
+    const box = h1.getBoundingClientRect(), cx = box.left + box.width / 2, cy = box.top + box.height / 2;
+    // Fixed layer over the whole page. "difference" blending turns the letters dark over the white sections
+    const layer = document.createElement('div');
+    layer.setAttribute('aria-hidden', 'true');
+    layer.style.cssText = 'position:fixed;inset:0;z-index:5;pointer-events:none;overflow:hidden;mix-blend-mode:difference';
+    const W0 = window.innerWidth, H0 = window.innerHeight, D = Math.min(W0, H0), pull = (W0 / 2 - cx) / W0;
+    // One copy of every letter, placed exactly over the original
+    const letters = [], rg = document.createRange(), walk = document.createTreeWalker(h1, NodeFilter.SHOW_TEXT);
+    for (let n; (n = walk.nextNode());) {
+      const cs = getComputedStyle(n.parentElement), fs = parseFloat(cs.fontSize);
+      for (let i = 0; i < n.data.length; i++) {
+        if (!n.data[i].trim()) continue;
+        rg.setStart(n, i); rg.setEnd(n, i + 1);
+        const r = rg.getBoundingClientRect();
+        if (!r.width) continue;
+        const el = document.createElement('span');
+        el.textContent = n.data[i];
+        el.style.cssText = 'position:absolute;left:' + r.left + 'px;top:' + r.top + 'px;white-space:pre;will-change:transform;font:' +
+          cs.fontWeight + ' ' + cs.fontSize + '/' + r.height + 'px ' + cs.fontFamily + ';color:' + cs.color;
+        layer.appendChild(el);
+        const x = r.left + r.width / 2, y = r.top + r.height / 2, len = Math.hypot(x - cx, y - cy) || 1;
+        letters.push({ el, x0: x, y0: y, x, y, w: r.width, ink: fs * 0.365, a: 0, rest: false,
+          vx: ((x - cx) / len * 0.6 + pull + rnd(-0.6, 0.6)) * D * rnd(0.6, 1.3),
+          vy: -D * rnd(0.9, 1.5) + (y - cy) / len * D * 0.3,
+          va: rnd(-720, 720) });
+      }
+    }
+    // Sparks in the accent colour
+    for (let i = 0; i < 18; i++) {
+      const el = document.createElement('span'), z = rnd(3, 7), ang = rnd(0, Math.PI * 2), d = D * rnd(0.12, 0.32);
+      el.style.cssText = 'position:absolute;left:' + (cx + rnd(-box.width / 3, box.width / 3)) + 'px;top:' + (cy + rnd(-box.height / 4, box.height / 4)) +
+        'px;width:' + z + 'px;height:' + z + 'px;border-radius:50%;background:oklch(var(--acc));box-shadow:0 0 10px 2px oklch(var(--acc) / 0.8)';
+      layer.appendChild(el);
+      el.animate([{ transform: 'none', opacity: 1 }, { transform: 'translate(' + Math.cos(ang) * d + 'px,' + Math.sin(ang) * d + 'px) scale(0.2)', opacity: 0 }],
+        { duration: rnd(450, 800), easing: 'cubic-bezier(.1,.8,.3,1)', fill: 'forwards' }).finished.then(() => el.remove(), () => {});
+    }
+    document.body.appendChild(layer);
+    h1.style.opacity = '0';
+    this.debris = { layer, letters, G: D * 3.2, D };
+    // Scrolling: the letters stay where they were on the page (so they end up in the air) and fall again
+    this.dbY = window.scrollY;
+    this.onDebrisScroll = () => {
+      const y = window.scrollY, dy = y - this.dbY, H = layer.clientHeight;
+      this.dbY = y;
+      if (!dy) return;
+      for (const L of letters) {
+        L.y = Math.max(L.y - dy, -H * 0.6); // never further than a bit above the screen, so they come back quickly
+        if (dy > 0) { L.vy = 0; L.va += rnd(-40, 40); }
+        L.rest = false;
+      }
+      this.wakeDebris();
+    };
+    this.onDebrisResize = () => { for (const L of letters) L.rest = false; this.wakeDebris(); };
+    window.addEventListener('scroll', this.onDebrisScroll, { passive: true });
+    window.addEventListener('resize', this.onDebrisResize);
+    this.wakeDebris();
+  }
+
+  // Physics: gravity, bounces on the bottom of the screen and on the sides; once down, each letter tips onto a flat side
+  wakeDebris() {
+    if (this.boomRaf) return;
+    const { layer, letters, G, D } = this.debris, rad = Math.PI / 180;
+    const ext = L => Math.abs(Math.sin(L.a * rad)) * L.w / 2 + Math.abs(Math.cos(L.a * rad)) * L.ink; // half height of the glyph as it sits
+    let last = performance.now();
+    const tick = now => {
+      const dt = Math.min(0.033, (now - last) / 1000); last = now;
+      const W = layer.clientWidth, floor = layer.clientHeight - 6;
+      let moving = false;
+      for (const L of letters) {
+        if (L.rest) continue;
+        const flat = Math.round(L.a / 90) * 90;
+        L.vy += G * dt; L.x += L.vx * dt; L.y += L.vy * dt; L.a += L.va * dt;
+        const hw = Math.abs(Math.cos(L.a * rad)) * L.w / 2 + Math.abs(Math.sin(L.a * rad)) * L.ink;
+        if (L.x < hw) { L.x = hw; L.vx = Math.abs(L.vx) * 0.5; }
+        if (L.x > W - hw) { L.x = W - hw; L.vx = -Math.abs(L.vx) * 0.5; }
+        if (L.y + ext(L) >= floor) {
+          if (L.vy > D * 0.5) { L.y = floor - ext(L); L.vy = -L.vy * 0.35; L.vx *= 0.7; L.va *= 0.5; }
+          else {
+            L.vy = 0; L.vx *= Math.pow(0.02, dt); L.va = 0;
+            L.a += (flat - L.a) * Math.min(1, dt * 12);
+            L.y = floor - ext(L);
+            if (Math.abs(L.vx) < 4 && Math.abs(flat - L.a) < 0.5) { L.a = flat; L.y = floor - ext(L); L.rest = true; }
+          }
+        }
+        L.el.style.transform = 'translate(' + (L.x - L.x0).toFixed(1) + 'px,' + (L.y - L.y0).toFixed(1) + 'px) rotate(' + L.a.toFixed(1) + 'deg)';
+        if (!L.rest) moving = true;
+      }
+      this.boomRaf = moving ? requestAnimationFrame(tick) : 0;
+    };
+    this.boomRaf = requestAnimationFrame(tick);
+  }
+
+  // ════ 11. TEMPLATE VALUES ═══════════════════════════════════════════════════
   // Everything the template reads: {{ halo }}, {{ t }}, refs, handlers and computed styles
 
   renderVals() {
@@ -1290,7 +1412,7 @@ class Component extends DCLogic {
       rTitle: r('title'), rLayer: r('layer'), rCtrl: r('ctrl'), rThumb: r('thumb'), rPrev: r('prev'), rNext: r('next'),
       rTl: r('tl'), rTlFade: r('tlFade'), rCaptcha: r('captcha'), rHeader: r('header'), rHeadBg: r('headBg'), rWhite: r('white'), rOutro: r('outro'),
       ...this.formVals(),
-      onDown: this.onDown, onWheel: this.onWheel, goProjects: this.goProjects, goAbout: this.goAbout, goHire: this.goHire,
+      onDown: this.onDown, onWheel: this.onWheel, nameTap: this.nameTap, nameOp: this.state.exploded ? 0 : 1, goProjects: this.goProjects, goAbout: this.goAbout, goHire: this.goHire,
       prev: () => this.go(-1), next: () => this.go(1),
       menuOpen: !!this.state.menuOpen,
       toggleMenu: () => this.setState(st => ({ menuOpen: !st.menuOpen })),
