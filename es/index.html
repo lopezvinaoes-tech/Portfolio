@@ -1455,11 +1455,15 @@ class Component extends DCLogic {
     const k = P.open ? Math.min(1, t / 0.6) : 0, col = base.map((v, i) => Math.round(v + (G[i] - v) * k));
 
     // Halo: spins faster and glows brighter while held; fades out as the portal takes over
+    // The halo also becomes the timeline line further down, so as soon as the page scrolls (or the charge
+    // runs out) it goes back to its normal angle; otherwise the line would come out tilted
     const inner = E.halo && E.halo.firstElementChild;
-    P.ang = (P.ang + (P.open ? 1600 : 25 + 1350 * p * p) * dt) % 360;
+    if (!P.open && window.scrollY > 4) { P.holding = false; P.p = 0; }
+    const spinning = P.open || P.p > 0;
+    P.ang = spinning ? (P.ang + (P.open ? 1600 : 25 + 1350 * P.p * P.p) * dt) % 360 : 0;
     if (inner) {
-      inner.style.rotate = P.ang.toFixed(1) + 'deg';
-      inner.style.filter = p > 0.001 && !P.open ? 'brightness(' + (1 + 0.9 * p).toFixed(3) + ')' : '';
+      inner.style.rotate = spinning ? P.ang.toFixed(1) + 'deg' : '';
+      inner.style.filter = P.p > 0.001 && !P.open ? 'brightness(' + (1 + 0.9 * P.p).toFixed(3) + ')' : '';
     }
     if (P.open && E.halo) E.halo.style.opacity = String(Math.max(0, 1 - t / 0.45));
 
