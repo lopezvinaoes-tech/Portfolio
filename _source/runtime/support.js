@@ -155,7 +155,10 @@
     runtime.markFetched(rootName);
     runtime.setRootName(rootName);
     runtime.adoptParsed(rootName, parsed);
-    if (!window.__resources) {
+    // PATCH (portfolio): the runtime used to download this page again and re-render it from the
+    // raw source. The template read from the DOM is equivalent here (every event used is in
+    // EVENT_MAP), so that second download + second full render is skipped.
+    if (false && !window.__resources) {
       fetch(location.href).then((res) => res.ok ? res.text() : "").then((t) => {
         const raw = t ? parseDcText(t) : null;
         if (raw?.template) runtime.updateHtml(rootName, raw.template);
@@ -193,9 +196,13 @@
       return h(Root, { ...defaults, ...entry.propOverrides || {} });
     }
     const ReactDOM = getReactDOM();
-    if (ReactDOM.createRoot)
-      ReactDOM.createRoot(hostEl).render(h(StandaloneRoot));
-    else ReactDOM.render(h(StandaloneRoot), hostEl);
+    if (ReactDOM.createRoot) {
+      // PATCH (portfolio): first render as a transition so React time-slices it
+      // (yields to the browser every few ms) instead of one long blocking task
+      const root = ReactDOM.createRoot(hostEl), R = getReact();
+      if (R.startTransition) R.startTransition(() => root.render(h(StandaloneRoot)));
+      else root.render(h(StandaloneRoot));
+    } else ReactDOM.render(h(StandaloneRoot), hostEl);
     return rootName;
   }
 

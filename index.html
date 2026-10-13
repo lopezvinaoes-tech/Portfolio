@@ -53,6 +53,8 @@
 /* Base: black page while the runtime boots; hide the raw template */
 html,body{margin:0;background:#000}
 x-dc{display:none}
+/* Instant hero photo: same size rule as the template on narrow screens */
+@media (max-width:819px){#hero-instant .hi-p{height:min(88%,114vw)!important}}
 /* Accessibility: visible keyboard focus */
 a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid oklch(var(--acc));outline-offset:3px}
 </style>
@@ -64,7 +66,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
 <script src="assets/vendor/react-18.3.1.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" defer></script>
 <script src="assets/vendor/react-dom-18.3.1.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" defer></script>
 <!-- Runtime (dc-runtime) that renders the page template below with React -->
-<script src="support.js?v=3" defer></script>
+<script src="support.js?v=4" defer></script>
 
 <!-- ── 9. Structured data (schema.org Person) for Google ───────────────────────── -->
 <script type="application/ld+json">
@@ -79,6 +81,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
 </head>
 <body>
 <noscript>
+<style>#hero-instant{display:none}</style>
 <main style="max-width:720px;margin:0 auto;padding:48px 20px;font-family:Inter,system-ui,sans-serif;color:#f5f5f7;line-height:1.5">
 <h1>Santiago Lopez Viñao</h1>
 <p>Coding Student · Barcelona, Spain · Available to hire</p>
@@ -97,6 +100,15 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
 <p><a href="mailto:lopezvinaoes@gmail.com" style="color:#f5f5f7">lopezvinaoes@gmail.com</a> · <a href="https://www.linkedin.com/in/santiago-lopez-vi%C3%B1ao/" style="color:#f5f5f7">LinkedIn</a> · <a href="https://github.com/lopezvinaoes-tech" style="color:#f5f5f7">GitHub</a> · CV: <a href="assets/cv/Santiago-Lopez-CV-EN.pdf" style="color:#f5f5f7">English</a> / <a href="assets/cv/Santiago-Lopez-CV-ES.pdf" style="color:#f5f5f7">Español</a></p>
 </main>
 </noscript>
+<!-- ── Instant hero photo (LCP) ────────────────────────────────────────────────
+     Plain HTML, painted before JavaScript starts so the largest element shows sooner.
+     Same position as the hero photo in the template; removed once the page is built. -->
+<div id="hero-instant" aria-hidden="true" style="position:absolute;top:0;left:0;right:0;height:100svh;overflow:hidden;pointer-events:none">
+  <div class="hi-p" style="position:absolute;left:50%;bottom:0;height:88%;aspect-ratio:1225/1368;transform:translateX(-55%)">
+    <img src="assets/person-novisor-960.webp?v=3" srcset="assets/person-novisor-480.webp?v=3 480w, assets/person-novisor-640.webp?v=3 640w, assets/person-novisor-768.webp?v=3 768w, assets/person-novisor-960.webp?v=3 960w, assets/person-novisor-1200.webp?v=3 1200w" sizes="(max-width: 819px) min(102vw, 79vh), 79vh" width="960" height="1072" fetchpriority="high" decoding="async" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:bottom center;filter:contrast(1.04)">
+    <div style="position:absolute;left:-20%;right:-20%;bottom:0;height:26%;pointer-events:none;background:linear-gradient(to top, #000 8%, rgba(0,0,0,0))"></div>
+  </div>
+</div>
 <!-- ════════════════════════════════════════════════════════════════════════
      PAGE TEMPLATE
      Rendered by the runtime (support.js) with React. {{ … }} are values from
@@ -172,7 +184,7 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
           </div>
         </div>
       </div>
-      <div role="group" aria-label="{{ t.langLabel }}" style="flex:none;display:flex;align-items:center;gap:2px;height:34px;padding:3px;box-sizing:border-box;border-radius:999px;border:1px solid rgba(255,255,255,0.16);background:rgba(255,255,255,0.04);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)"><button type="button" onClick="{{ setEn }}" aria-pressed="{{ isEn }}" aria-label="English" lang="en" style="height:26px;min-width:34px;padding:0 9px;border:0;border-radius:999px;cursor:pointer;font:600 12px Inter,system-ui,sans-serif;letter-spacing:0;background:{{ enBg }};color:{{ enFg }};transition:background .2s, color .2s">EN</button><button type="button" onClick="{{ setEs }}" aria-pressed="{{ isEs }}" aria-label="Español" lang="es" style="height:26px;min-width:34px;padding:0 9px;border:0;border-radius:999px;cursor:pointer;font:600 12px Inter,system-ui,sans-serif;letter-spacing:0;background:{{ esBg }};color:{{ esFg }};transition:background .2s, color .2s">ES</button></div>
+      <div role="group" aria-label="{{ t.langLabel }}" style="flex:none;display:flex;align-items:center;gap:2px;height:34px;padding:3px;box-sizing:border-box;border-radius:999px;border:1px solid rgba(255,255,255,0.16);background:rgba(255,255,255,0.04);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)"><button type="button" onClick="{{ setEn }}" aria-pressed="{{ isEn }}" aria-label="EN · English" lang="en" style="height:26px;min-width:34px;padding:0 9px;border:0;border-radius:999px;cursor:pointer;font:600 12px Inter,system-ui,sans-serif;letter-spacing:0;background:{{ enBg }};color:{{ enFg }};transition:background .2s, color .2s">EN</button><button type="button" onClick="{{ setEs }}" aria-pressed="{{ isEs }}" aria-label="ES · Español" lang="es" style="height:26px;min-width:34px;padding:0 9px;border:0;border-radius:999px;cursor:pointer;font:600 12px Inter,system-ui,sans-serif;letter-spacing:0;background:{{ esBg }};color:{{ esFg }};transition:background .2s, color .2s">ES</button></div>
       <a href="#contact" onClick="{{ goHire }}" style="display:flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:999px;background:oklch(var(--acc) / 0.14);border:1px solid oklch(var(--acc) / 0.35);color:oklch(var(--acc-hi));font-size:13px;font-weight:500;letter-spacing:-0.02em;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)" style-hover="background:oklch(var(--acc) / 0.22)">
         <span style="width:7px;height:7px;border-radius:50%;background:oklch(var(--acc));box-shadow:0 0 8px oklch(var(--acc))"></span>
         <span style="color:oklch(var(--acc-hi))">{{ t.hire }}</span>
@@ -181,7 +193,7 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
     </sc-if>
     <!-- Mobile header: language switch + menu button and its panel (< 820 px) -->
     <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
-      <div style="display:flex;align-items:center;gap:10px"><div role="group" aria-label="{{ t.langLabel }}" style="flex:none;display:flex;align-items:center;gap:2px;height:40px;padding:3px;box-sizing:border-box;border-radius:999px;border:1px solid rgba(255,255,255,0.16);background:rgba(255,255,255,0.04);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)"><button type="button" onClick="{{ setEn }}" aria-pressed="{{ isEn }}" aria-label="English" lang="en" style="height:32px;min-width:40px;padding:0 10px;border:0;border-radius:999px;cursor:pointer;font:600 12px Inter,system-ui,sans-serif;letter-spacing:0;background:{{ enBg }};color:{{ enFg }};transition:background .2s, color .2s">EN</button><button type="button" onClick="{{ setEs }}" aria-pressed="{{ isEs }}" aria-label="Español" lang="es" style="height:32px;min-width:40px;padding:0 10px;border:0;border-radius:999px;cursor:pointer;font:600 12px Inter,system-ui,sans-serif;letter-spacing:0;background:{{ esBg }};color:{{ esFg }};transition:background .2s, color .2s">ES</button></div><button onClick="{{ toggleMenu }}" aria-label="{{ t.menu }}" aria-expanded="{{ menuOpen }}" style="position:relative;flex:none;width:44px;height:44px;padding:0;border-radius:50%;border:1px solid rgba(255,255,255,0.16);background:rgba(255,255,255,0.08);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);cursor:pointer">
+      <div style="display:flex;align-items:center;gap:10px"><div role="group" aria-label="{{ t.langLabel }}" style="flex:none;display:flex;align-items:center;gap:2px;height:40px;padding:3px;box-sizing:border-box;border-radius:999px;border:1px solid rgba(255,255,255,0.16);background:rgba(255,255,255,0.04);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)"><button type="button" onClick="{{ setEn }}" aria-pressed="{{ isEn }}" aria-label="EN · English" lang="en" style="height:32px;min-width:40px;padding:0 10px;border:0;border-radius:999px;cursor:pointer;font:600 12px Inter,system-ui,sans-serif;letter-spacing:0;background:{{ enBg }};color:{{ enFg }};transition:background .2s, color .2s">EN</button><button type="button" onClick="{{ setEs }}" aria-pressed="{{ isEs }}" aria-label="ES · Español" lang="es" style="height:32px;min-width:40px;padding:0 10px;border:0;border-radius:999px;cursor:pointer;font:600 12px Inter,system-ui,sans-serif;letter-spacing:0;background:{{ esBg }};color:{{ esFg }};transition:background .2s, color .2s">ES</button></div><button onClick="{{ toggleMenu }}" aria-label="{{ t.menu }}" aria-expanded="{{ menuOpen }}" style="position:relative;flex:none;width:44px;height:44px;padding:0;border-radius:50%;border:1px solid rgba(255,255,255,0.16);background:rgba(255,255,255,0.08);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);cursor:pointer">
         <span style="position:absolute;left:13px;top:17px;width:17px;height:1.5px;border-radius:2px;background:#f5f5f7;transition:transform .3s cubic-bezier(.2,.8,.2,1);transform:{{ l1T }}"></span>
         <span style="position:absolute;left:13px;top:24px;width:17px;height:1.5px;border-radius:2px;background:#f5f5f7;transition:transform .3s cubic-bezier(.2,.8,.2,1);transform:{{ l2T }}"></span>
       </button></div>
@@ -297,7 +309,7 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
   </section>
 
   <!-- Project cards (positioned every frame by update()) -->
-  <div ref="{{ rLayer }}" onPointerDown="{{ onDown }}" onWheel="{{ onWheel }}" style="position:absolute;inset:0;z-index:3;pointer-events:none;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab">
+  <div ref="{{ rLayer }}" onPointerDown="{{ onDown }}" style="position:absolute;inset:0;z-index:3;pointer-events:none;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab">
     <sc-for list="{{ projects }}" as="p" hint-placeholder-count="0">
       <div ref="{{ p.ref }}" style="position:absolute;left:0;top:0;width:190px;height:320px;opacity:0;visibility:hidden;transform-origin:50% 100%;will-change:transform,opacity;box-sizing:border-box;border-radius:22px;overflow:hidden;background:linear-gradient(180deg,#1a1a1c 0%,#0b0b0c 100%);border:1px solid rgba(255,255,255,0.1);box-shadow:0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);display:flex;flex-direction:column;justify-content:space-between;padding:18px">
         <div style="position:absolute;left:0;right:0;bottom:0;height:65%;background:radial-gradient(90% 70% at 50% 120%, oklch(var(--acc) / 0.22), rgba(0,0,0,0) 70%);pointer-events:none"></div>
@@ -484,7 +496,7 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
             <span>{{ sendLabel }}</span>
             <span style="display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:oklch(var(--acc));color:#000;font-size:13px;letter-spacing:0">→</span>
           </button>
-          <p style="margin:0;max-width:420px;font-size:12.5px;line-height:1.45;letter-spacing:-0.01em;color:#86868b;text-wrap:pretty">{{ t.privacy }}</p>
+          <p style="margin:0;max-width:420px;font-size:12.5px;line-height:1.45;letter-spacing:-0.01em;color:#6e6e73;text-wrap:pretty">{{ t.privacy }}</p>
         </form>
       </sc-if>
       <!-- Thank-you message after sending -->
@@ -537,7 +549,7 @@ class Component extends DCLogic {
       description: 'Portfolio of Santiago Lopez Viñao, coding student based in Barcelona. Projects, timeline and ideas box.',
       langLabel: 'Language',
       projects: 'Projects', about: 'About', contact: 'Contact', hire: 'Available to hire', menu: 'Menu',
-      downloadCv: 'Download CV', cvEn: 'Download CV in English', cvEs: 'Download CV in Spanish',
+      downloadCv: 'Download CV', cvEn: 'Download CV in English (EN)', cvEs: 'Download CV in Spanish (ES)',
       heroSize: 'clamp(44px,5.4vw,88px)',
       // Lines use the name's line spacing (h1: 0.95 × its font size) so 'Coding' / 'Student.' sit level with 'Santiago' / 'Lopez V.'
       heroLh: 'calc(0.95 * clamp(33px,4.4vw,88px))', heroTop: '-5px',
@@ -582,7 +594,7 @@ class Component extends DCLogic {
       description: 'Portfolio de Santiago Lopez Viñao, programador en formación en Barcelona. Proyectos, trayectoria y buzón de ideas.',
       langLabel: 'Idioma',
       projects: 'Proyectos', about: 'Sobre mí', contact: 'Contacto', hire: 'Disponible para trabajar', menu: 'Menú',
-      downloadCv: 'Descargar CV', cvEn: 'Descargar CV en inglés', cvEs: 'Descargar CV en español',
+      downloadCv: 'Descargar CV', cvEn: 'Descargar CV en inglés (EN)', cvEs: 'Descargar CV en español (ES)',
       heroSize: 'clamp(32px,3.5vw,58px)', // longer words than EN: sized so the block is about as wide as the English one
       // Smaller text, so the lines use the name's line spacing (h1: 0.95 × its font size) and are nudged to sit level with it
       heroLh: 'calc(0.95 * clamp(33px,4.4vw,88px))', heroTop: '-5px',
@@ -696,6 +708,12 @@ class Component extends DCLogic {
   // Listeners on mount, refresh on update, clean-up on unmount
 
   componentDidMount() {
+    // The template's hero photo is ready: drop the instant HTML copy (it sits behind the stage anyway)
+    const inst = document.getElementById('hero-instant');
+    if (inst) {
+      const img = this.el.person && this.el.person.querySelector('img'), drop = () => inst.remove();
+      if (img && img.decode) img.decode().then(drop, drop); else drop();
+    }
     this.applyAccent();
     this.applyDocLang(this.state.lang);
     this.onResize = () => { this.m = null; this.dirty = true; this.setState({ w: window.innerWidth }); this.kick(); };
@@ -713,6 +731,8 @@ class Component extends DCLogic {
     window.addEventListener('touchend', this.onTE, { passive: true });
     window.addEventListener('touchcancel', this.onTE, { passive: true });
     window.addEventListener('wheel', this.onWh, { passive: true });
+    // Carousel trackpad scroll: native passive listener (React's onWheel isn't passive)
+    if (this.el.layer) this.el.layer.addEventListener('wheel', this.onWheel, { passive: true });
     const ct = document.getElementById('contact');
     const lazyCap = () => { if (this.capIO) { this.capIO.disconnect(); this.capIO = null; } this.loadCaptcha(); };
     if (ct && 'IntersectionObserver' in window) {
@@ -736,6 +756,7 @@ class Component extends DCLogic {
     window.removeEventListener('touchend', this.onTE);
     window.removeEventListener('touchcancel', this.onTE);
     window.removeEventListener('wheel', this.onWh);
+    if (this.el.layer) this.el.layer.removeEventListener('wheel', this.onWheel);
   }
 
   // ════ 6. SCROLL ENGINE ══════════════════════════════════════════════════════
@@ -792,7 +813,9 @@ class Component extends DCLogic {
   // Layout reads happen once (resize / font load), never inside the per-frame update
   measure() {
     const E = this.el, wrap = E.wrap, st = E.stage, tl = E.tl; if (!wrap || !st) return null;
-    const vw = st.clientWidth, sh = st.clientHeight, narrow = vw < 820;
+    // All style writes first, then all layout reads: the browser lays the page out once
+    // (reading positions between writes forced several full-page layouts on load)
+    const narrow = window.innerWidth < 820;
     if (tl) {
       if (!this.rows || !this.rows.length || !this.rows[0].row.isConnected) {
         this.rows = [...tl.querySelectorAll('[data-tl-row]')].map(row => ({
@@ -802,7 +825,6 @@ class Component extends DCLogic {
         this.layoutNarrow = null;
       }
       if (this.layoutNarrow !== narrow) { this.layoutNarrow = narrow; this.applyLayout(narrow); }
-      for (const r of this.rows) r.y = r.row.offsetTop + 10;
     }
     if (!this.ro && window.ResizeObserver) {
       this.ro = new ResizeObserver(() => { this.m = null; this.dirty = true; this.kick(); });
@@ -815,7 +837,10 @@ class Component extends DCLogic {
     [E.tl, E.cta, E.toggle].forEach(n => wc(n, 'transform, opacity'));
     [E.amb, E.white, E.tlFade, E.headBg].forEach(n => wc(n, 'opacity'));
     if (this.rows) this.rows.forEach(r => r.sides.forEach(n => wc(n, 'transform, opacity')));
-    this.m = { vw, sh, top: wrap.getBoundingClientRect().top + window.scrollY, tb: E.title ? E.title.offsetTop + E.title.offsetHeight : 0, wrapH: wrap.offsetHeight };
+    // ── reads ──
+    const vw = st.clientWidth, sh = st.clientHeight;
+    if (this.rows) for (const r of this.rows) r.y = r.row.offsetTop + 10;
+    this.m = { vw, sh, narrow, top: wrap.getBoundingClientRect().top + window.scrollY, tb: E.title ? E.title.offsetTop + E.title.offsetHeight : 0, wrapH: wrap.offsetHeight };
     return this.m;
   }
   applyLayout(narrow) {
@@ -865,7 +890,7 @@ class Component extends DCLogic {
     const k = (this.props.intensity ?? 100) / 100;
 
     const m = this.m || this.measure(); if (!m) return;
-    const vw = m.vw, sh = m.sh, narrow = vw < 820;
+    const vw = m.vw, sh = m.sh, narrow = m.narrow; // same breakpoint as the template (window.innerWidth < 820)
     // s = scroll progress in screen-heights
     const s = Math.max(0, (window.scrollY - m.top) / sh);
     const key = s.toFixed(4) + '|' + this.c + '|' + (this.skip ? 1 : 0);
