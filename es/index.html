@@ -1165,7 +1165,7 @@ class Component extends DCLogic {
       ddOp: this.state.contactOpen ? 1 : 0, ddVis: this.state.contactOpen ? 'visible' : 'hidden',
       ddY: this.state.contactOpen ? '0px' : '-6px', ddScale: this.state.contactOpen ? 1 : 0.97,
       setVisor: () => this.setState({ visor: true }), setNoVisor: () => this.setState({ visor: false }),
-      toggleVisor: () => this.setState({ visor: !visor }), visorTitle: visor ? T.visorOn : T.visorOff,
+      toggleVisor: () => { if (!visor) this.setHalo({ haloColor: 'green' }); this.setState({ visor: !visor }); }, // putting the visor on turns the halo green visorTitle: visor ? T.visorOn : T.visorOff,
       visorBg: visor ? 'oklch(0.8 0.2 152 / 0.16)' : 'rgba(255,255,255,0.08)',
       visorBd: visor ? 'oklch(0.8 0.2 152 / 0.55)' : 'rgba(255,255,255,0.16)',
       visorFg: visor ? 'oklch(0.85 0.2 152)' : '#f5f5f7',
