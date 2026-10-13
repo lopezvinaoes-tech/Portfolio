@@ -415,7 +415,9 @@ class Component extends DCLogic {
       langLabel: 'Language',
       projects: 'Projects', about: 'About', contact: 'Contact', hire: 'Available to hire', menu: 'Menu',
       downloadCv: 'Download CV', cvEn: 'Download CV in English', cvEs: 'Download CV in Spanish',
-      heroSize: 'clamp(44px,5.4vw,88px)', heroLh: '0.95', heroTop: '0px',
+      heroSize: 'clamp(44px,5.4vw,88px)',
+      // Lines use the name's line spacing (h1: 0.95 × its font size) so 'Coding' / 'Student.' sit level with 'Santiago' / 'Lopez V.'
+      heroLh: 'calc(0.95 * clamp(33px,4.4vw,88px))', heroTop: '-5px',
       iAm: 'I am', heroA: 'Coding', heroB: 'Student.', heroBShort: 'Student',
       visorLabel: 'Toggle visor', visorOn: 'Visor on', visorOff: 'Visor off', contactMe: 'Contact me',
       comingA: 'Coming', comingB: 'soon.', project: 'Project', soon: 'Soon',
