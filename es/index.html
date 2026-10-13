@@ -102,7 +102,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
 <!-- ── Instant hero photo (LCP) ────────────────────────────────────────────────
      Plain HTML, painted before JavaScript starts so the largest element shows sooner.
      Same position as the hero photo in the template; removed once the page is built. -->
-<div id="hero-instant" aria-hidden="true" style="position:absolute;top:0;left:0;right:0;height:100svh;overflow:hidden;pointer-events:none">
+<div id="hero-instant" aria-hidden="true" style="position:absolute;top:0;left:0;right:0;height:100svh;overflow:hidden;pointer-events:none;z-index:1">
   <div class="hi-p" style="position:absolute;left:50%;bottom:0;height:88%;aspect-ratio:1225/1368;transform:translateX(-55%)">
     <img src="../assets/person-novisor-960.webp?v=3" srcset="../assets/person-novisor-480.webp?v=3 480w, ../assets/person-novisor-640.webp?v=3 640w, ../assets/person-novisor-768.webp?v=3 768w, ../assets/person-novisor-960.webp?v=3 960w, ../assets/person-novisor-1200.webp?v=3 1200w" sizes="(max-width: 819px) min(102vw, 79vh), 79vh" width="960" height="1072" fetchpriority="high" decoding="async" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:bottom center;filter:contrast(1.04)">
     <div style="position:absolute;left:-20%;right:-20%;bottom:0;height:26%;pointer-events:none;background:linear-gradient(to top, #000 8%, rgba(0,0,0,0))"></div>
@@ -247,7 +247,7 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
       <img src="../assets/person-red-960.webp?v=3" srcset="../assets/person-red-480.webp?v=3 480w, ../assets/person-red-640.webp?v=3 640w, ../assets/person-red-768.webp?v=3 768w, ../assets/person-red-960.webp?v=3 960w, ../assets/person-red-1200.webp?v=3 1200w" sizes="(max-width: 819px) min(102vw, 79vh), 79vh" width="960" height="1072" loading="lazy" decoding="async" alt="Santiago Lopez V." style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:bottom center;z-index:1;filter:contrast(1.04)">
     </sc-if>
     <sc-if value="{{ noVisor }}" hint-placeholder-val="{{ true }}">
-      <img src="../assets/person-novisor-960.webp?v=3" srcset="../assets/person-novisor-480.webp?v=3 480w, ../assets/person-novisor-640.webp?v=3 640w, ../assets/person-novisor-768.webp?v=3 768w, ../assets/person-novisor-960.webp?v=3 960w, ../assets/person-novisor-1200.webp?v=3 1200w" sizes="(max-width: 819px) min(102vw, 79vh), 79vh" width="960" height="1072" fetchpriority="high" decoding="async" alt="Santiago Lopez V." style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:bottom center;z-index:1;filter:contrast(1.04)">
+      <img src="../assets/person-novisor-960.webp?v=3" srcset="../assets/person-novisor-480.webp?v=3 480w, ../assets/person-novisor-640.webp?v=3 640w, ../assets/person-novisor-768.webp?v=3 768w, ../assets/person-novisor-960.webp?v=3 960w, ../assets/person-novisor-1200.webp?v=3 1200w" sizes="(max-width: 819px) min(102vw, 79vh), 79vh" width="960" height="1072" fetchpriority="high" decoding="async" alt="Santiago Lopez V." style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:bottom center;z-index:1;filter:contrast(1.04);opacity:{{ heroImgOp }}">
     </sc-if>
     <div style="position:absolute;left:-20%;right:-20%;bottom:0;height:26%;z-index:2;pointer-events:none;background:linear-gradient(to top, #000 8%, rgba(0,0,0,0))"></div>
   </div>
@@ -548,7 +548,7 @@ class Component extends DCLogic {
       description: 'Portfolio of Santiago Lopez Viñao, coding student based in Barcelona. Projects, timeline and ideas box.',
       langLabel: 'Language',
       projects: 'Projects', about: 'About', contact: 'Contact', hire: 'Available to hire', menu: 'Menu',
-      downloadCv: 'Download CV', cvEn: 'Download CV in English (EN)', cvEs: 'Download CV in Spanish (ES)',
+      downloadCv: 'Download CV', cvEn: 'EN · Download CV in English', cvEs: 'ES · Download CV in Spanish',
       heroSize: 'clamp(44px,5.4vw,88px)',
       // Lines use the name's line spacing (h1: 0.95 × its font size) so 'Coding' / 'Student.' sit level with 'Santiago' / 'Lopez V.'
       heroLh: 'calc(0.95 * clamp(33px,4.4vw,88px))', heroTop: '-5px',
@@ -593,7 +593,7 @@ class Component extends DCLogic {
       description: 'Portfolio de Santiago Lopez Viñao, programador en formación en Barcelona. Proyectos, trayectoria y buzón de ideas.',
       langLabel: 'Idioma',
       projects: 'Proyectos', about: 'Sobre mí', contact: 'Contacto', hire: 'Disponible para trabajar', menu: 'Menú',
-      downloadCv: 'Descargar CV', cvEn: 'Descargar CV en inglés (EN)', cvEs: 'Descargar CV en español (ES)',
+      downloadCv: 'Descargar CV', cvEn: 'EN · Descargar CV en inglés', cvEs: 'ES · Descargar CV en español',
       heroSize: 'clamp(32px,3.5vw,58px)', // longer words than EN: sized so the block is about as wide as the English one
       // Smaller text, so the lines use the name's line spacing (h1: 0.95 × its font size) and are nudged to sit level with it
       heroLh: 'calc(0.95 * clamp(33px,4.4vw,88px))', heroTop: '-5px',
@@ -707,12 +707,14 @@ class Component extends DCLogic {
   // Listeners on mount, refresh on update, clean-up on unmount
 
   componentDidMount() {
-    // The template's hero photo is ready: drop the instant HTML copy (it sits behind the stage anyway)
+    // Instant HTML hero photo → template photo. The template copy stays transparent until it is decoded,
+    // so the browser counts the HTML photo as the largest paint (LCP) and nothing flickers
     const inst = document.getElementById('hero-instant');
     if (inst) {
-      const img = this.el.person && this.el.person.querySelector('img'), drop = () => inst.remove();
-      if (img && img.decode) img.decode().then(drop, drop); else drop();
-    }
+      const img = this.el.person && this.el.person.querySelector('img');
+      const swap = () => this.setState({ heroReady: true }, () => requestAnimationFrame(() => inst.remove()));
+      if (img && img.decode) img.decode().then(swap, swap); else swap();
+    } else this.setState({ heroReady: true });
     this.applyAccent();
     this.applyDocLang(this.state.lang);
     this.onResize = () => { this.m = null; this.dirty = true; this.setState({ w: window.innerWidth }); this.kick(); };
@@ -1263,7 +1265,7 @@ class Component extends DCLogic {
       setEn: () => this.setLang('en'), setEs: () => this.setLang('es'),
       enBg: lang === 'en' ? 'rgba(255,255,255,0.16)' : segOff, enFg: lang === 'en' ? segOn : '#86868b',
       esBg: lang === 'es' ? 'rgba(255,255,255,0.16)' : segOff, esFg: lang === 'es' ? segOn : '#86868b',
-      halo, wide, narrow: !wide, visor, noVisor: !visor, visorGreen: visor && haloKey !== 'red', visorRed: visor && haloKey === 'red', projects: this.projects,
+      halo, wide, narrow: !wide, visor, noVisor: !visor, heroImgOp: this.state.heroReady ? 1 : 0, visorGreen: visor && haloKey !== 'red', visorRed: visor && haloKey === 'red', projects: this.projects,
       haloOpen: !!this.state.haloOpen,
       toggleHaloPanel: () => this.setState(st => ({ haloOpen: !st.haloOpen })),
       hpOp: this.state.haloOpen ? 1 : 0, hpVis: this.state.haloOpen ? 'visible' : 'hidden',
