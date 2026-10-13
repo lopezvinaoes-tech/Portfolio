@@ -8,7 +8,7 @@ Single-page portfolio: hero with halo, Projects carousel, About timeline and Ide
 index.html        → the whole site, English URL (icons are inlined as data URIs)
 es/index.html     → Spanish URL, GENERATED from index.html — don't edit by hand
 404.html          → bilingual "page not found"
-support.js        → runtime that renders the page with React
+support.js        → runtime that renders the page with React (minified; readable copy in _source/runtime/)
 assets/fonts/     → Inter (variable, Latin subset), self-hosted — no Google Fonts
 assets/vendor/    → React + ReactDOM 18.3.1 (see below)
 assets/           → photos, favicon and share image (og.jpg)
@@ -71,6 +71,17 @@ python3 _source/og/build_og.py
 
 `index.html` loads Vercel Speed Insights and Vercel Web Analytics (cookie-free). They only collect
 data once enabled in the Vercel project (Analytics / Speed Insights → Enable).
+
+## Runtime (support.js)
+
+`support.js` is served minified (≈ 13.7 KB gzip instead of 19 KB). The readable original is
+`_source/runtime/support.js`. To minify it again with terser (keeps function and class names):
+
+```
+npx terser _source/runtime/support.js --ecma 2020 -c passes=2 -m --keep-classnames --keep-fnames -o support.js
+```
+
+Then add the one-line comment header back and bump `support.js?v=` in `index.html`.
 
 ## React files
 
