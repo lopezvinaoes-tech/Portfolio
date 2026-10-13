@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Page behind the halo portal (hidden extra on the home page). Provisional content; not indexed -->
+<title>Through the portal — Santiago Lopez Viñao</title>
+<meta name="robots" content="noindex">
+<meta name="google" content="notranslate">
+<meta name="theme-color" content="#0c0614">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preload" href="/assets/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:Inter;font-style:normal;font-weight:100 900;font-display:swap;src:url(/assets/fonts/inter-latin-var.woff2) format("woff2")}
+:root{--gold:255 168 56}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;color:#f5f5f7;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+/* Same colours as the inside of the portal on the home page, so crossing over is seamless */
+html{background:#0c0614}
+body{background:radial-gradient(farthest-corner at 50% 50%, #160b26 0%, #0c0614 62%, #2b1407 100%);display:flex;align-items:center;justify-content:center;padding:24px 16px;overflow:hidden}
+#stars{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+a.slv{position:fixed;top:clamp(14px,3.2vh,28px);left:clamp(16px,4vw,56px);display:flex;align-items:center;justify-content:center;height:36px;padding:0 12px;border:1px solid rgba(255,255,255,.22);border-radius:10px;color:#f5f5f7;text-decoration:none;font-size:15px;font-weight:600;letter-spacing:-.03em}
+a.slv:focus-visible,button:focus-visible{outline:2px solid rgb(var(--gold));outline-offset:3px}
+main{position:relative;text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px;max-width:620px;animation:arrive 1.1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes arrive{from{opacity:0;transform:scale(1.12);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+.eyebrow{margin:0;font-size:15px;font-weight:500;letter-spacing:-.01em;color:rgb(var(--gold));text-shadow:0 0 18px rgb(var(--gold) / .55)}
+h1{margin:0;font-size:clamp(40px,7vw,72px);line-height:.95;font-weight:600;letter-spacing:-.05em}
+h1 span{color:#86868b}
+p.lead{margin:0;font-size:17px;line-height:1.5;letter-spacing:-.02em;color:#a1a1a6;text-wrap:pretty}
+button.back{margin-top:22px;display:flex;flex-direction:column;align-items:center;gap:12px;background:none;border:0;padding:6px;color:#f5f5f7;font:inherit;font-size:15px;font-weight:500;letter-spacing:-.02em;cursor:pointer;border-radius:16px}
+button.back canvas{width:120px;height:120px;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+button.back:hover canvas{transform:scale(1.08)}
+#flash{position:fixed;inset:0;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%, #fff6e0 0%, rgb(var(--gold)) 30%, #000 75%)}
+[data-es]{display:none}
+html[lang="es"] [data-en]{display:none}
+html[lang="es"] [data-es]{display:revert}
+</style>
+<script>
+  // Language: the portal passes it in the address (#en / #es); otherwise the same rule as the main page
+  (function () {
+    var lang = 'en', h = location.hash.slice(1);
+    if (h === 'en' || h === 'es') lang = h;
+    else {
+      try { var s = localStorage.getItem('lang'); if (s === 'en' || s === 'es') lang = s; else throw 0; }
+      catch (_) {
+        var list = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
+        for (var i = 0; i < list.length; i++) {
+          var b = String(list[i] || '').toLowerCase().split('-')[0];
+          if (b === 'en') { lang = 'en'; break; }
+          if (b === 'es' || b === 'ca' || b === 'gl' || b === 'eu') { lang = 'es'; break; }
+        }
+      }
+    }
+    document.documentElement.lang = lang;
+    if (lang === 'es') document.title = 'Al otro lado del portal — Santiago Lopez Viñao';
+  })();
+</script>
+</head>
+<body>
+<canvas id="stars" aria-hidden="true"></canvas>
+<a class="slv" href="/" data-home aria-label="Santiago Lopez Viñao — home">SLV</a>
+<main>
+  <p class="eyebrow" data-en>You've crossed the portal</p>
+  <p class="eyebrow" data-es>Has cruzado el portal</p>
+  <h1>Santiago <span>Lopez V.</span></h1>
+  <p class="lead" data-en>Something is taking shape on this side. It isn't ready yet, so come back soon.</p>
+  <p class="lead" data-es>A este lado se está construyendo algo. Todavía no está listo, así que vuelve pronto.</p>
+  <button class="back" type="button" id="back">
+    <canvas id="ring" width="240" height="240" aria-hidden="true"></canvas>
+    <span data-en>Back through the portal</span>
+    <span data-es>Volver por el portal</span>
+  </button>
+</main>
+<div id="flash" aria-hidden="true"></div>
+<script>
+(function () {
+  var es = document.documentElement.lang === 'es', home = es ? '/es/' : '/';
+  document.querySelector('[data-home]').href = home;
+  var rnd = function (a, b) { return a + Math.random() * (b - a); };
+
+  // Background: slowly turning stars, like the inside of the portal
+  var sc = document.getElementById('stars'), sx = sc.getContext('2d'), stars = [];
+  for (var i = 0; i < 140; i++) stars.push({ a: rnd(0, 6.283), r: Math.sqrt(Math.random()), s: rnd(0.5, 1.7), f: rnd(0, 6) });
+
+  // Small portal: a ring of golden sparks that leads back home
+  var rc = document.getElementById('ring'), rx = rc.getContext('2d'), sparks = [], ang = 0, fast = false;
+  var last = performance.now();
+  function frame(now) {
+    var dt = Math.min(0.05, (now - last) / 1000), t = now / 1000; last = now;
+    var dpr = Math.min(2, window.devicePixelRatio || 1), W = innerWidth, H = innerHeight;
+    if (sc.width !== Math.round(W * dpr) || sc.height !== Math.round(H * dpr)) { sc.width = Math.round(W * dpr); sc.height = Math.round(H * dpr); }
+    sx.setTransform(dpr, 0, 0, dpr, 0, 0); sx.clearRect(0, 0, W, H); sx.fillStyle = '#fff';
+    var R = Math.hypot(W, H) / 2;
+    for (var j = 0; j < stars.length; j++) {
+      var s = stars[j], a = s.a + t * 0.02;
+      sx.globalAlpha = 0.25 + 0.3 * Math.sin(t * 2 + s.f);
+      sx.fillRect(W / 2 + Math.cos(a) * s.r * R, H / 2 + Math.sin(a) * s.r * R, s.s, s.s);
+    }
+    sx.globalAlpha = 1;
+
+    var c = 120, r = 70;
+    ang += (fast ? 900 : 260) * dt;
+    rx.clearRect(0, 0, 240, 240);
+    var ig = rx.createRadialGradient(c, c, 0, c, c, r);
+    ig.addColorStop(0, '#160b26'); ig.addColorStop(0.75, '#0c0614'); ig.addColorStop(1, '#3a1a08');
+    rx.fillStyle = ig; rx.beginPath(); rx.arc(c, c, r, 0, 6.283); rx.fill();
+    rx.globalCompositeOperation = 'lighter';
+    [[12, 0.12], [6, 0.3], [2.5, 0.7], [1.2, 0.95]].forEach(function (L) {
+      rx.strokeStyle = (L[0] < 2 ? 'rgba(255,244,220,' : 'rgba(255,168,56,') + L[1] + ')'; rx.lineWidth = L[0];
+      rx.beginPath(); rx.arc(c, c, r, 0, 6.283); rx.stroke();
+    });
+    for (var n = 0; n < (fast ? 14 : 5); n++) {
+      var q = rnd(0, 6.283), sp = rnd(40, 110);
+      sparks.push({ x: c + Math.cos(q) * r, y: c + Math.sin(q) * r, vx: -Math.sin(q) * sp, vy: Math.cos(q) * sp, l: 0, m: rnd(0.25, 0.6) });
+    }
+    sparks = sparks.filter(function (p) { return (p.l += dt) < p.m; });
+    rx.lineCap = 'round';
+    for (var k = 0; k < sparks.length; k++) {
+      var p = sparks[k]; p.vy += 160 * dt; p.x += p.vx * dt; p.y += p.vy * dt;
+      rx.strokeStyle = 'rgba(255,190,90,' + (1 - p.l / p.m).toFixed(3) + ')'; rx.lineWidth = 1.6;
+      rx.beginPath(); rx.moveTo(p.x, p.y); rx.lineTo(p.x - p.vx * 0.04, p.y - p.vy * 0.04); rx.stroke();
+    }
+    rx.globalCompositeOperation = 'source-over';
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  // Going back: the small portal spins up, a flash, and home
+  document.getElementById('back').addEventListener('click', function () {
+    if (fast) return;
+    fast = true;
+    var f = document.getElementById('flash');
+    rc.style.transition = 'transform .9s cubic-bezier(.6,0,.9,.4)'; rc.style.transform = 'scale(14)';
+    f.style.transition = 'opacity .5s ease .45s'; f.style.opacity = '1';
+    setTimeout(function () { location.assign(home); }, 950);
+  });
+  // Coming back here with the browser's back button: reset the small portal
+  addEventListener('pageshow', function (e) {
+    if (!e.persisted) return;
+    fast = false; rc.style.transition = 'none'; rc.style.transform = ''; var f = document.getElementById('flash'); f.style.transition = 'none'; f.style.opacity = '0';
+  });
+})();
+</script>
+</body>
+</html>

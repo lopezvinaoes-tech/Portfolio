@@ -8,6 +8,7 @@ Single-page portfolio: hero with halo, Projects carousel, About timeline and Ide
 index.html        → the whole site, English URL (icons are inlined as data URIs)
 es/index.html     → Spanish URL, GENERATED from index.html — don't edit by hand
 404.html          → bilingual "page not found"
+portal/           → page behind the halo portal (hidden extra, not indexed)
 support.js        → runtime that renders the page with React (minified; readable copy in _source/runtime/)
 assets/fonts/     → Inter (variable, Latin subset), self-hosted — no Google Fonts
 assets/vendor/    → React + ReactDOM 18.3.1 (see below)
@@ -40,7 +41,8 @@ The file is split into labelled blocks (search for `══` / `──` comments)
 | 8. Projects carousel | arrows, keyboard, drag, wheel |
 | 9. Ideas box form | hCaptcha, validation, Web3Forms |
 | 10. Name: jump and explosion | click the name to make it jump; three clicks in a row blow the letters apart; they lie at the bottom of the screen, fly up when the page scrolls and fall again |
-| 11. Template values | `renderVals()` — everything the template reads |
+| 11. Halo portal | hold the halo: it spins faster, throws sparks and opens a portal to `/portal/` |
+| 12. Template values | `renderVals()` — everything the template reads |
 
 ## Languages (EN / ES)
 

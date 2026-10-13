@@ -743,6 +743,7 @@ class Component extends DCLogic {
       this.capIO.observe(ct);
       ct.addEventListener('focusin', lazyCap, { once: true });
     } else this.loadCaptcha();
+    this.initPortal();
     this.kick();
   }
   componentDidUpdate() { this.applyAccent(); this.dirty = true; this.renderCaptcha(); this.kick(); }
@@ -761,6 +762,7 @@ class Component extends DCLogic {
     window.removeEventListener('wheel', this.onWh);
     if (this.el.layer) this.el.layer.removeEventListener('wheel', this.onWheel);
     cancelAnimationFrame(this.boomRaf);
+    this.removePortal();
     if (this.debris) { window.removeEventListener('scroll', this.onDebrisScroll); window.removeEventListener('resize', this.onDebrisResize); this.debris.layer.remove(); }
   }
 
@@ -1356,7 +1358,180 @@ class Component extends DCLogic {
     this.boomRaf = requestAnimationFrame(tick);
   }
 
-  // ════ 11. TEMPLATE VALUES ═══════════════════════════════════════════════════
+  // ════ 11. HALO PORTAL ═══════════════════════════════════════════════════════
+  // Hidden detail: holding the halo spins it faster and faster until it throws sparks (in the halo colour)
+  // and turns into a golden portal. The photo fades, the view dives into the portal and the visitor lands
+  // on /portal/. Letting go early slows the halo down again. Sparks are drawn on a 2D canvas.
+
+  PORTAL_HOLD = 5; // seconds of holding needed
+  PORTAL_RGB = { white: [240, 242, 255], green: [47, 220, 120], red: [242, 69, 60] };
+  PORTAL_GOLD = [255, 168, 56];
+
+  initPortal() {
+    const st = this.el.stage;
+    if (!st) return;
+    this.pt = { p: 0, holding: false, open: false, t: 0, ang: 0, sparks: [], carry: 0, raf: 0 };
+    this.onPortalDown = e => {
+      const P = this.pt, H = this.el.halo;
+      if (P.open || !H || window.scrollY > 4 || (e.pointerType === 'mouse' && e.button !== 0)) return;
+      if (e.target.closest && e.target.closest('a,button,input,textarea,select,label,h1')) return;
+      const r = H.getBoundingClientRect(), R = (r.width + r.height) / 4;
+      if (Math.hypot(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2)) > R * 1.04) return;
+      Object.assign(P, { holding: true, x0: e.clientX, y0: e.clientY, id: e.pointerId });
+      this.portalLoop();
+    };
+    // Moving the finger or the mouse means scrolling or dragging, not holding
+    this.onPortalMove = e => { const P = this.pt; if (P.holding && e.pointerId === P.id && Math.hypot(e.clientX - P.x0, e.clientY - P.y0) > 12) P.holding = false; };
+    this.onPortalUp = e => { const P = this.pt; if (P.holding && e.pointerId === P.id) P.holding = false; };
+    this.onPortalMenu = e => { if (this.pt.holding || this.pt.open) e.preventDefault(); }; // no long-press menu on the photo
+    this.onPortalShow = e => { if (e.persisted && this.pt.open) location.reload(); }; // coming back with the browser's back button
+    st.addEventListener('pointerdown', this.onPortalDown);
+    st.addEventListener('contextmenu', this.onPortalMenu);
+    window.addEventListener('pointermove', this.onPortalMove, { passive: true });
+    window.addEventListener('pointerup', this.onPortalUp);
+    window.addEventListener('pointercancel', this.onPortalUp);
+    window.addEventListener('pageshow', this.onPortalShow);
+    st.style.webkitTouchCallout = 'none';
+  }
+
+  removePortal() {
+    const st = this.el.stage;
+    if (!this.pt) return;
+    cancelAnimationFrame(this.pt.raf);
+    if (st) { st.removeEventListener('pointerdown', this.onPortalDown); st.removeEventListener('contextmenu', this.onPortalMenu); }
+    window.removeEventListener('pointermove', this.onPortalMove);
+    window.removeEventListener('pointerup', this.onPortalUp);
+    window.removeEventListener('pointercancel', this.onPortalUp);
+    window.removeEventListener('pageshow', this.onPortalShow);
+  }
+
+  portalLoop() {
+    const P = this.pt;
+    if (P.raf) return;
+    let last = performance.now();
+    const step = now => {
+      const dt = Math.min(0.05, (now - last) / 1000); last = now;
+      if (!P.open) {
+        P.p = P.holding ? Math.min(1, P.p + dt / this.PORTAL_HOLD) : Math.max(0, P.p - dt / 0.9);
+        if (P.p >= 1) this.openPortal();
+      } else P.t += dt;
+      P.raf = this.portalFrame(dt) ? requestAnimationFrame(step) : 0;
+    };
+    P.raf = requestAnimationFrame(step);
+  }
+
+  openPortal() {
+    const P = this.pt, E = this.el;
+    P.open = true; P.t = 0; P.holding = false;
+    document.documentElement.style.overflow = 'hidden'; // no scrolling while the portal opens
+    if (navigator.vibrate) try { navigator.vibrate(25); } catch (_) {}
+    // The photo dissolves, then the texts and buttons go
+    if (E.person) { E.person.style.transition = 'opacity 1s ease .3s, filter 1s ease .3s'; E.person.style.opacity = '0'; E.person.style.filter = 'blur(6px) brightness(1.5)'; }
+    setTimeout(() => {
+      for (const n of [E.left, E.right, E.narrow, E.cta, E.toggle, E.header]) if (n) { n.style.transition = 'opacity .45s ease'; n.style.opacity = '0'; }
+    }, 1100);
+  }
+
+  portalFrame(dt) {
+    const P = this.pt, E = this.el, st = E.stage, rnd = (a, b) => a + Math.random() * (b - a);
+    if (!P.cv) {
+      P.cv = document.createElement('canvas');
+      P.cv.setAttribute('aria-hidden', 'true');
+      P.cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none';
+      st.appendChild(P.cv); // above the photo, below the texts
+      P.ctx = P.cv.getContext('2d');
+    }
+    const cv = P.cv, ctx = P.ctx, dpr = Math.min(1.5, window.devicePixelRatio || 1), W = st.clientWidth, H = st.clientHeight;
+    if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+    if (!P.open || !P.geo) {
+      const sb = st.getBoundingClientRect(), hr = E.halo.getBoundingClientRect();
+      P.geo = { cx: hr.left - sb.left + hr.width / 2, cy: hr.top - sb.top + hr.height / 2, R: (hr.width + hr.height) / 4 };
+    }
+    const { cx, cy, R } = P.geo, p = P.p, t = P.t;
+    const base = this.PORTAL_RGB[this.tone().key] || this.PORTAL_RGB.white, G = this.PORTAL_GOLD;
+    const k = P.open ? Math.min(1, t / 0.6) : 0, col = base.map((v, i) => Math.round(v + (G[i] - v) * k));
+
+    // Halo: spins faster and glows brighter while held; fades out as the portal takes over
+    const inner = E.halo && E.halo.firstElementChild;
+    P.ang = (P.ang + (P.open ? 1600 : 25 + 1350 * p * p) * dt) % 360;
+    if (inner) {
+      inner.style.rotate = P.ang.toFixed(1) + 'deg';
+      inner.style.filter = p > 0.001 && !P.open ? 'brightness(' + (1 + 0.9 * p).toFixed(3) + ')' : '';
+    }
+    if (P.open && E.halo) E.halo.style.opacity = String(Math.max(0, 1 - t / 0.45));
+
+    // Sparks: thrown off the ring along the direction of spin, pulled down by gravity
+    const rate = P.open ? (t < 2.6 ? 1100 : 0) : p > 0.18 ? 950 * Math.pow((p - 0.18) / 0.82, 1.3) : 0;
+    P.carry += rate * dt;
+    while (P.carry >= 1 && P.sparks.length < 1600) {
+      P.carry -= 1;
+      const a = rnd(0, Math.PI * 2), r = R * rnd(0.975, 1.025), sp = R * (P.open ? rnd(1.1, 2.6) : (0.6 + 1.8 * p) * rnd(0.5, 1.2));
+      const hot = Math.random() < 0.3;
+      P.sparks.push({ x: cx + Math.cos(a) * r, y: cy + Math.sin(a) * r, vx: -Math.sin(a) * sp + Math.cos(a) * sp * 0.15, vy: Math.cos(a) * sp + Math.sin(a) * sp * 0.15,
+        life: 0, max: rnd(0.35, 0.85), w: rnd(1, 2.3), c: hot ? [255, 246, 225] : col.slice() });
+    }
+    if (P.carry > 1) P.carry = 0;
+    const g = R * (P.open ? 2.4 : 1.2), drag = Math.pow(0.18, dt);
+    P.sparks = P.sparks.filter(s => (s.life += dt) < s.max);
+    for (const s of P.sparks) { s.vx *= drag; s.vy = s.vy * drag + g * dt; s.x += s.vx * dt; s.y += s.vy * dt; }
+
+    // Camera: after the photo has gone, dive into the portal until its inside fills the screen
+    const far = Math.max(Math.hypot(cx, cy), Math.hypot(W - cx, cy), Math.hypot(cx, H - cy), Math.hypot(W - cx, H - cy));
+    const u = P.open ? Math.min(1, Math.max(0, (t - 1.5) / 1.4)) : 0, z = 1 + (far / (R * 0.93) - 1) * u * u * u;
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.translate(cx, cy); ctx.scale(z, z); ctx.translate(-cx, -cy);
+    if (P.open) {
+      // Inside of the portal: the other side, a deep violet night with a few stars
+      const ia = Math.min(1, t / 0.9);
+      const ig = ctx.createRadialGradient(cx, cy, 0, cx, cy, R);
+      ig.addColorStop(0, 'rgba(22,11,38,' + ia + ')'); ig.addColorStop(0.72, 'rgba(12,6,20,' + ia + ')'); ig.addColorStop(1, 'rgba(58,26,8,' + ia + ')');
+      ctx.fillStyle = ig; ctx.beginPath(); ctx.arc(cx, cy, R * 0.99, 0, Math.PI * 2); ctx.fill();
+      if (!P.stars) P.stars = Array.from({ length: 70 }, () => ({ a: rnd(0, Math.PI * 2), r: Math.sqrt(Math.random()) * 0.92, s: rnd(0.5, 1.6), f: rnd(0, 6) }));
+      ctx.fillStyle = '#fff';
+      for (const s of P.stars) {
+        const a = s.a + t * 0.15;
+        ctx.globalAlpha = ia * (0.35 + 0.35 * Math.sin(t * 3 + s.f));
+        ctx.fillRect(cx + Math.cos(a) * s.r * R, cy + Math.sin(a) * s.r * R, s.s, s.s);
+      }
+      ctx.globalAlpha = 1;
+    }
+    ctx.globalCompositeOperation = 'lighter';
+    if (P.open) {
+      // The portal ring: layered glow plus streaks racing around it
+      const ra = Math.min(1, t / 0.35), c = col.join(',');
+      for (const [lw, al] of [[22, 0.12], [10, 0.3], [4, 0.65], [1.6, 0.95]]) {
+        ctx.strokeStyle = 'rgba(' + (lw < 2 ? '255,244,220' : c) + ',' + al * ra + ')'; ctx.lineWidth = lw;
+        ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
+      }
+      if (!P.streaks) P.streaks = Array.from({ length: 46 }, () => ({ a: rnd(0, Math.PI * 2), o: rnd(-0.035, 0.035), l: rnd(0.15, 0.6), w: rnd(1, 2.6), v: rnd(0.8, 1.3) }));
+      ctx.lineCap = 'round';
+      for (const s of P.streaks) {
+        const a = s.a + P.ang * Math.PI / 180 * s.v;
+        ctx.strokeStyle = 'rgba(' + c + ',' + 0.8 * ra + ')'; ctx.lineWidth = s.w;
+        ctx.beginPath(); ctx.arc(cx, cy, R * (1 + s.o), a, a + s.l); ctx.stroke();
+      }
+    }
+    for (const s of P.sparks) {
+      const f = 1 - s.life / s.max;
+      ctx.strokeStyle = 'rgba(' + s.c.join(',') + ',' + f.toFixed(3) + ')'; ctx.lineWidth = s.w;
+      ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(s.x - s.vx * 0.03, s.y - s.vy * 0.03); ctx.stroke();
+    }
+    ctx.globalCompositeOperation = 'source-over';
+
+    // Inside the portal: go to the new page
+    if (P.open && t >= 3.0 && !P.gone) {
+      P.gone = true;
+      document.documentElement.style.background = '#0c0614';
+      location.assign('/portal/#' + this.state.lang);
+    }
+    const busy = P.open || P.p > 0 || P.sparks.length;
+    if (!busy) { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); if (inner) inner.style.filter = ''; }
+    return busy;
+  }
+
+  // ════ 12. TEMPLATE VALUES ═══════════════════════════════════════════════════
   // Everything the template reads: {{ halo }}, {{ t }}, refs, handlers and computed styles
 
   renderVals() {
