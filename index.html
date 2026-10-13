@@ -175,7 +175,7 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
   <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
     <div ref="{{ rLeft }}" style="position:absolute;left:clamp(20px,4vw,56px);top:50%;transform:translateY(-50%);z-index:3;display:flex;flex-direction:column;gap:14px">
       <span style="font-size: 23px; font-weight: 500; letter-spacing: -0.01em; color: #86868b">{{ t.iAm }}</span>
-      <p style="margin:0;font-size:{{ t.heroSize }};line-height:0.95;font-weight:600;letter-spacing:-0.05em"><span style="color:oklch(0.8 0.2 152);text-shadow:0 0 18px oklch(0.8 0.2 152 / 0.55), 0 0 48px oklch(0.8 0.2 152 / 0.3)">{{ t.heroA }}</span><br><span style="color:#86868b">{{ t.heroB }}</span></p>
+      <p style="margin:0;position:relative;top:{{ t.heroTop }};font-size:{{ t.heroSize }};line-height:{{ t.heroLh }};font-weight:600;letter-spacing:-0.05em"><span style="color:oklch(0.8 0.2 152);text-shadow:0 0 18px oklch(0.8 0.2 152 / 0.55), 0 0 48px oklch(0.8 0.2 152 / 0.3)">{{ t.heroA }}</span><br><span style="color:#86868b">{{ t.heroB }}</span></p>
     </div>
     <div ref="{{ rRight }}" style="position:absolute;right:clamp(20px,4vw,56px);top:50%;transform:translateY(-50%);z-index:3;text-align:right;display:flex;flex-direction:column;gap:14px;align-items:flex-end">
       <span style="font-size:13px;font-weight:500;letter-spacing:-0.01em;color:#86868b"><br></span><h1 style="margin: 0; font-size: clamp(33px,4.4vw,88px); line-height: 0.95; font-weight: 600; letter-spacing: -0.05em; font-style: normal">Santiago<br><span style="color: #86868b; font-size: 0.89em">Lopez V.</span></h1>
@@ -415,7 +415,7 @@ class Component extends DCLogic {
       langLabel: 'Language',
       projects: 'Projects', about: 'About', contact: 'Contact', hire: 'Available to hire', menu: 'Menu',
       downloadCv: 'Download CV', cvEn: 'Download CV in English', cvEs: 'Download CV in Spanish',
-      heroSize: 'clamp(44px,5.4vw,88px)',
+      heroSize: 'clamp(44px,5.4vw,88px)', heroLh: '0.95', heroTop: '0px',
       iAm: 'I am', heroA: 'Coding', heroB: 'Student.', heroBShort: 'Student',
       visorLabel: 'Toggle visor', visorOn: 'Visor on', visorOff: 'Visor off', contactMe: 'Contact me',
       comingA: 'Coming', comingB: 'soon.', project: 'Project', soon: 'Soon',
@@ -456,6 +456,8 @@ class Component extends DCLogic {
       projects: 'Proyectos', about: 'Sobre mí', contact: 'Contacto', hire: 'Disponible para trabajar', menu: 'Menú',
       downloadCv: 'Descargar CV', cvEn: 'Descargar CV en inglés', cvEs: 'Descargar CV en español',
       heroSize: 'clamp(32px,3.5vw,58px)', // longer words than EN: sized so the block is about as wide as the English one
+      // Smaller text, so the lines use the name's line spacing (h1: 0.95 × its font size) and are nudged to sit level with it
+      heroLh: 'calc(0.95 * clamp(33px,4.4vw,88px))', heroTop: '-5px',
       iAm: 'Soy', heroA: 'Programador', heroB: 'en formación.', heroBShort: 'en formación',
       visorLabel: 'Activar o desactivar el visor', visorOn: 'Visor activado', visorOff: 'Visor desactivado', contactMe: 'Contáctame',
       comingA: 'Muy', comingB: 'pronto.', project: 'Proyecto', soon: 'Pronto',
