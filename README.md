@@ -21,6 +21,26 @@ _source/site/     → generator for es/, sitemap.xml, robots.txt and the site ad
 _source/og/       → generator for the link-preview images (assets/og.jpg, og-es.jpg)
 ```
 
+## Code map (index.html)
+
+The file is split into labelled blocks (search for `══` / `──` comments):
+
+| Block | What's inside |
+|---|---|
+| `<head>` 1–10 | Document · title, description, robots · canonical + hreflang · Open Graph · icons · preloads · critical CSS · scripts · JSON-LD · analytics |
+| `<noscript>` | Text version of the page for crawlers and browsers without JavaScript |
+| Page template | Header · hero (halo, photo, role/name, halo settings, visor, CTA) · projects · about + timeline · dreams · ideas box · footer, inside `<main>` |
+| Script 1. State and references | `state`, element refs, carousel bookkeeping |
+| 2. Texts (EN / ES) | `I18N` dictionary |
+| 3. Language | detection, `<html lang>`, title |
+| 4. Halo and accent colour | colours, saved choice, intensity, red/green accent |
+| 5. Lifecycle | listeners on mount / clean-up |
+| 6. Scroll engine | snapping, measuring, `update()` (runs every frame) |
+| 7. Navigation | animated scroll for header links |
+| 8. Projects carousel | arrows, keyboard, drag, wheel |
+| 9. Ideas box form | hCaptcha, validation, Web3Forms |
+| 10. Template values | `renderVals()` — everything the template reads |
+
 ## Languages (EN / ES)
 
 All texts live in the `I18N` object inside `index.html` and are used in the template as `{{ t.key }}`.
