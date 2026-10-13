@@ -207,7 +207,7 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
         <div style="display:flex;flex-direction:column;gap:10px">
           <span style="font-size:12px;font-weight:500;letter-spacing:-0.01em;color:#86868b">{{ t.haloColor }}</span>
           <div role="radiogroup" aria-label="{{ t.haloColor }}" style="display:flex;gap:12px">
-            <sc-for list="{{ haloColors }}" as="hc" hint-placeholder-count="4"><button type="button" role="radio" aria-checked="{{ hc.on }}" aria-label="{{ hc.label }}" title="{{ hc.label }}" onClick="{{ hc.pick }}" style="flex:none;width:30px;height:30px;padding:0;border-radius:50%;cursor:pointer;background:{{ hc.fill }};border:2px solid {{ hc.ring }};box-shadow:{{ hc.glow }};transition:box-shadow .2s, border-color .2s, transform .2s" style-hover="transform:scale(1.08)"></button></sc-for>
+            <sc-for list="{{ haloColors }}" as="hc" hint-placeholder-count="3"><button type="button" role="radio" aria-checked="{{ hc.on }}" aria-label="{{ hc.label }}" title="{{ hc.label }}" onClick="{{ hc.pick }}" style="flex:none;width:30px;height:30px;padding:0;border-radius:50%;cursor:pointer;background:{{ hc.fill }};border:2px solid {{ hc.ring }};box-shadow:{{ hc.glow }};transition:box-shadow .2s, border-color .2s, transform .2s" style-hover="transform:scale(1.08)"></button></sc-for>
           </div>
         </div>
         <label style="display:flex;flex-direction:column;gap:8px">
@@ -427,18 +427,17 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
 <script type="text/x-dc" data-dc-script data-props="{&quot;photo&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Con visor&quot;,&quot;Sin visor&quot;],&quot;default&quot;:&quot;Sin visor&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Foto&quot;},&quot;animate&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Halo&quot;},&quot;web3formsKey&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Formulario&quot;}}">
 class Component extends DCLogic {
   state = { w: typeof window !== 'undefined' ? window.innerWidth : 1440, lang: this.detectLang(), haloOpen: false, ...this.readHalo() };
-  // Halo colours. 'swatch' is the solid colour used for the buttons.
+  // Halo colours (white, green, red). 'swatch' is the solid colour used for the buttons.
   HALO_TONES = {
     white: { core: '#ffffff', g: a => 'oklch(0.96 0.02 240 / ' + a + ')', swatch: '#f5f5f7' },
     green: { core: 'oklch(0.95 0.09 155)', g: a => 'oklch(0.8 0.2 152 / ' + a + ')', swatch: 'oklch(0.8 0.2 152)' },
-    red: { core: 'oklch(0.93 0.06 25)', g: a => 'oklch(0.68 0.22 25 / ' + a + ')', swatch: 'oklch(0.68 0.22 25)' },
-    blue: { core: 'oklch(0.92 0.07 250)', g: a => 'oklch(0.72 0.17 255 / ' + a + ')', swatch: 'oklch(0.72 0.17 255)' }
+    red: { core: 'oklch(0.93 0.06 25)', g: a => 'oklch(0.68 0.22 25 / ' + a + ')', swatch: 'oklch(0.68 0.22 25)' }
   };
   // Saved halo choice (colour null = automatic: white, or green with the visor on). Level 0–100, 50 = default look.
   readHalo() {
     let haloColor = null, haloLevel = 50;
     try {
-      const c = localStorage.getItem('haloColor'); if (['white', 'green', 'red', 'blue'].includes(c)) haloColor = c;
+      const c = localStorage.getItem('haloColor'); if (['white', 'green', 'red'].includes(c)) haloColor = c;
       const l = parseInt(localStorage.getItem('haloLevel'), 10); if (l >= 0 && l <= 100) haloLevel = l;
     } catch (_) {}
     return { haloColor, haloLevel };
@@ -496,7 +495,7 @@ class Component extends DCLogic {
       thanks: 'Thank you', onItsWay: "Your idea is on its way. I'll get back to you soon.", sendAnother: 'Send another idea',
       location: 'Barcelona, Spain',
       haloSettings: 'Halo settings', haloColor: 'Halo colour', haloIntensity: 'Intensity',
-      haloNames: { white: 'White', green: 'Green', red: 'Red', blue: 'Blue' },
+      haloNames: { white: 'White', green: 'Green', red: 'Red' },
       privacy: "I'll only use your details to reply to you. The form is sent through Web3Forms and protected by hCaptcha.",
       err: {
         idea: 'Tell me a little about your idea first.', name: 'Please add your name.',
@@ -541,7 +540,7 @@ class Component extends DCLogic {
       thanks: 'Gracias', onItsWay: 'Tu idea va de camino. Te responderé pronto.', sendAnother: 'Enviar otra idea',
       location: 'Barcelona, España',
       haloSettings: 'Ajustes del halo', haloColor: 'Color del halo', haloIntensity: 'Intensidad',
-      haloNames: { white: 'Blanco', green: 'Verde', red: 'Rojo', blue: 'Azul' },
+      haloNames: { white: 'Blanco', green: 'Verde', red: 'Rojo' },
       privacy: 'Solo usaré tus datos para responderte. El formulario se envía a través de Web3Forms y está protegido con hCaptcha.',
       err: {
         idea: 'Cuéntame un poco tu idea primero.', name: 'Añade tu nombre, por favor.',
@@ -1007,7 +1006,7 @@ class Component extends DCLogic {
       for (const el of r.sides) { el.style.opacity = rv; el.style.transform = 'translateY(' + (1 - rv) * 28 + 'px)'; }
       if (!r.dot) continue;
       const lit = y < sh * 0.58;
-      // Active dots, ticks, years and titles follow the halo when it's green or red; with white or blue they stay green
+      // Active dots, ticks, years and titles are red with the red halo and green otherwise
       const rk = (lit ? 1 : 0) + '|' + tl_accent;
       if (r.key === rk) continue;
       r.key = rk;
