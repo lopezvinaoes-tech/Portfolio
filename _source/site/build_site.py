@@ -69,7 +69,7 @@ def attr_escape(s):
 
 def spanish(html):
     h = html
-    h = sub_once(r'<html lang="en" data-page-lang="en">', '<html lang="es" data-page-lang="es">', h)
+    h = sub_once(r'<html lang="en" data-page-lang="en" translate="no">', '<html lang="es" data-page-lang="es" translate="no">', h)
     h = sub_once(r"<title>[^<]*</title>", f"<title>{ES_HEAD['title']}</title>", h)
     h = sub_once(r'<meta name="description" content="[^"]*">',
                  f'<meta name="description" content="{attr_escape(ES_HEAD["description"])}">', h)
