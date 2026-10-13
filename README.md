@@ -42,7 +42,8 @@ The file is split into labelled blocks (search for `══` / `──` comments)
 | 9. Ideas box form | hCaptcha, validation, Web3Forms |
 | 10. Name: jump and explosion | click the name to make it jump; three clicks in a row blow the letters apart; they lie at the bottom of the screen, fly up when the page scrolls and fall again |
 | 11. Halo portal | hold the halo: it spins faster, throws sparks and opens a portal to `/portal/` |
-| 12. Template values | `renderVals()` — everything the template reads |
+| 12. Developer vision | visor on: holograms show what each part is built with, a face scanner and a live engine readout |
+| 13. Template values | `renderVals()` — everything the template reads |
 
 ## Languages (EN / ES)
 

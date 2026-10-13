@@ -273,8 +273,8 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
     </div>
   </sc-if>
 
-  <!-- ── HERO: halo settings (colour + intensity) and visor button ─────────── -->
-  <div ref="{{ rToggle }}" style="position:absolute;right:clamp(20px,4vw,56px);bottom:clamp(30px,7vh,74px);z-index:5;display:flex;align-items:center;gap:10px">
+  <!-- ── Halo settings (colour + intensity) and visor button: fixed, they follow the whole page ── -->
+  <div ref="{{ rToggle }}" style="position:fixed;right:clamp(20px,4vw,56px);bottom:clamp(30px,7vh,74px);z-index:6;display:flex;align-items:center;gap:10px">
     <div style="position:relative">
       <button type="button" onClick="{{ toggleHaloPanel }}" aria-label="{{ t.haloSettings }}" aria-expanded="{{ haloOpen }}" aria-controls="halo-panel" title="{{ t.haloSettings }}" style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border-radius:50%;cursor:pointer;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:background .3s, border-color .3s, transform .2s;background:{{ haloBtnBg }};border:1px solid {{ haloBtnBd }}" style-hover="transform:scale(1.06)" style-active="transform:scale(0.96)">
         <span style="display:block;width:18px;height:18px;box-sizing:border-box;border-radius:50%;border:2px solid {{ haloSwatch }};box-shadow:0 0 8px {{ haloSwatch }}, inset 0 0 5px {{ haloSwatch }};transition:border-color .3s, box-shadow .3s"></span>
@@ -558,6 +558,21 @@ class Component extends DCLogic {
       // Lines use the name's line spacing (h1: 0.95 × its font size) so 'Coding' / 'Student.' sit level with 'Santiago' / 'Lopez V.'
       heroLh: 'calc(0.95 * clamp(33px,4.4vw,88px))', heroTop: '-5px',
       iAm: 'I am', heroA: 'Coding', heroB: 'Student.', heroBShort: 'Student',
+      // Developer vision (visor on): [label, what it's built with, fun line]
+      holo: {
+        halo: ['CSS · Halo', 'Pure CSS: layered box-shadows and a conic-gradient. No images.', 'Hold it down… if you dare.'],
+        photo: ['AVIF · WebP', 'Five sizes: your browser picks the right one.', ''],
+        name: ['HTML · h1', 'Real text for Google, not an image.', 'Try clicking it three times.'],
+        font: ['Font · Inter variable', 'Self-hosted: one file for every weight.', ''],
+        lang: ['i18n · EN / ES', 'Picks up your device\u2019s language. The /es/ page is generated with Python.', ''],
+        colour: ['localStorage', 'Your colour is saved in the browser and applied before the page paints: no flicker.', ''],
+        carousel: ['JavaScript · no libraries', 'Hand-built carousel: drag, keyboard, wheel and trackpad.', 'The projects are still in the oven.'],
+        timeline: ['CSS transform', 'This line is the halo from the top, stretched as you scroll.', ''],
+        dreams: ['CSS filter · blur', 'Each word comes into focus with an animated blur.', ''],
+        form: ['Web3Forms · hCaptcha', 'Sends without a server of my own, with spam protection.', ''],
+        cv: ['Python · Playwright', 'Both CVs are PDFs generated with code.', '']
+      },
+      holoSubject: 'Subject: Santiago', holoKi: 'Ki level', holoEngine: 'Scroll engine · rAF', holoFps: 'fps', holoLoad: 'load', holoWeight: 'weight',
       visorLabel: 'Toggle visor', visorOn: 'Visor on', visorOff: 'Visor off', contactMe: 'Contact me',
       comingA: 'Coming', comingB: 'soon.', project: 'Project', soon: 'Soon',
       prevProject: 'Previous project', nextProject: 'Next project',
@@ -603,6 +618,21 @@ class Component extends DCLogic {
       // Smaller text, so the lines use the name's line spacing (h1: 0.95 × its font size) and are nudged to sit level with it
       heroLh: 'calc(0.95 * clamp(33px,4.4vw,88px))', heroTop: '-5px',
       iAm: 'Soy', heroA: 'Programador', heroB: 'en formación.', heroBShort: 'en formación',
+      // Visión de programador (visor activado): [etiqueta, con qué está hecho, detalle divertido]
+      holo: {
+        halo: ['CSS · Halo', 'CSS puro: capas de box-shadow y un conic-gradient. Cero imágenes.', 'Mantenlo pulsado… si te atreves.'],
+        photo: ['AVIF · WebP', 'Cinco tamaños: tu navegador elige el suyo.', ''],
+        name: ['HTML · h1', 'Texto real para Google, no una imagen.', 'Prueba a hacerle 3 clics.'],
+        font: ['Fuente · Inter variable', 'Alojada en la propia web: un solo archivo para todos los grosores.', ''],
+        lang: ['i18n · EN / ES', 'Detecta el idioma de tu dispositivo. La página /es/ se genera con Python.', ''],
+        colour: ['localStorage', 'Tu color se guarda en el navegador y se aplica antes de pintar la página: sin parpadeo.', ''],
+        carousel: ['JavaScript · sin librerías', 'Carrusel hecho a mano: arrastre, teclado, rueda y trackpad.', 'Los proyectos están en el horno.'],
+        timeline: ['CSS transform', 'Esta línea es el halo de la portada, estirado mientras haces scroll.', ''],
+        dreams: ['CSS filter · blur', 'Cada palabra se enfoca con un desenfoque animado.', ''],
+        form: ['Web3Forms · hCaptcha', 'Envía sin servidor propio y con protección contra el spam.', ''],
+        cv: ['Python · Playwright', 'Los dos CV son PDF generados con código.', '']
+      },
+      holoSubject: 'Sujeto: Santiago', holoKi: 'Nivel de ki', holoEngine: 'Motor de scroll · rAF', holoFps: 'fps', holoLoad: 'carga', holoWeight: 'peso',
       visorLabel: 'Activar o desactivar el visor', visorOn: 'Visor activado', visorOff: 'Visor desactivado', contactMe: 'Contáctame',
       comingA: 'Muy', comingB: 'pronto.', project: 'Proyecto', soon: 'Pronto',
       prevProject: 'Proyecto anterior', nextProject: 'Proyecto siguiente',
@@ -747,9 +777,10 @@ class Component extends DCLogic {
       ct.addEventListener('focusin', lazyCap, { once: true });
     } else this.loadCaptcha();
     this.initPortal();
+    this.syncHolo();
     this.kick();
   }
-  componentDidUpdate() { this.applyAccent(); this.dirty = true; this.renderCaptcha(); this.kick(); }
+  componentDidUpdate() { this.applyAccent(); this.dirty = true; this.renderCaptcha(); this.syncHolo(); this.kick(); }
   componentWillUnmount() {
     window.removeEventListener('resize', this.onResize);
     window.removeEventListener('scroll', this.onScroll);
@@ -766,6 +797,7 @@ class Component extends DCLogic {
     if (this.el.layer) this.el.layer.removeEventListener('wheel', this.onWheel);
     cancelAnimationFrame(this.boomRaf);
     this.removePortal();
+    this.stopHolo(true);
     if (this.debris) { window.removeEventListener('scroll', this.onDebrisScroll); window.removeEventListener('resize', this.onDebrisResize); this.debris.layer.remove(); }
   }
 
@@ -844,7 +876,7 @@ class Component extends DCLogic {
     const wc = (n, v) => { if (n && n.style.willChange !== v) n.style.willChange = v; };
     const tf = narrow ? 'transform, opacity' : 'transform, opacity, filter';
     [E.title, E.left, E.right, E.narrow, E.person].forEach(n => wc(n, tf));
-    [E.tl, E.cta, E.toggle].forEach(n => wc(n, 'transform, opacity'));
+    [E.tl, E.cta].forEach(n => wc(n, 'transform, opacity'));
     [E.amb, E.white, E.tlFade, E.headBg].forEach(n => wc(n, 'opacity'));
     if (this.rows) this.rows.forEach(r => r.sides.forEach(n => wc(n, 'transform, opacity')));
     // ── reads ──
@@ -970,7 +1002,9 @@ class Component extends DCLogic {
     if (E.halo) E.halo.style.visibility = gone;
     if (E.amb) E.amb.style.visibility = gone;
     const wv = sstep(0.75, 1, O2);
-    if (E.header) E.header.style.filter = wv > 0 ? 'invert(' + wv + ') hue-rotate(' + wv * 180 + 'deg)' : '';
+    const inv = wv > 0 ? 'invert(' + wv + ') hue-rotate(' + wv * 180 + 'deg)' : '';
+    if (E.header) E.header.style.filter = inv;
+    if (E.toggle) E.toggle.style.filter = inv; // the visor and colour buttons sit on the white sections too
     if (E.headBg) E.headBg.style.opacity = clamp((s - (sO + 2.3)) / 0.15);
     if (E.outro) {
       E.outro.style.visibility = O2 > 0.8 ? 'visible' : 'hidden';
@@ -1002,7 +1036,7 @@ class Component extends DCLogic {
     fade(E.right, 'translateY(-50%) translateX(' + Te * 48 + 'px)');
     fade(E.narrow, 'translateY(' + -Te * 30 + 'px)');
     const U = eio(clamp(s / 0.29));
-    for (const n of [E.cta, E.toggle]) if (n) { n.style.opacity = 1 - U; n.style.transform = 'translateY(' + U * 16 + 'px)'; n.style.visibility = U > 0.99 ? 'hidden' : ''; }
+    if (E.cta) { E.cta.style.opacity = 1 - U; E.cta.style.transform = 'translateY(' + U * 16 + 'px)'; E.cta.style.visibility = U > 0.99 ? 'hidden' : ''; }
 
     // 2 · Projects
     const TT = eio(clamp((s - 0.82) / 0.38)), TO = eio(clamp((s - 2.4) / 0.35));
@@ -1539,7 +1573,242 @@ class Component extends DCLogic {
     return busy;
   }
 
-  // ════ 12. TEMPLATE VALUES ═══════════════════════════════════════════════════
+  // ════ 12. DEVELOPER VISION (HOLOGRAMS) ═════════════════════════════════════
+  // With the visor on, holograms come out of each part of the page and say what it is built with.
+  // They live on one fixed layer (aria-hidden: decoration only) and follow their element every frame.
+  // Matte cards in the visor's colour (green or red; green and white on the white sections), two at a time at most.
+
+  HOLO_CSS = `
+.holo{position:fixed;inset:0;z-index:5;pointer-events:none;opacity:0;transition:opacity .3s ease;font-family:Inter,system-ui,sans-serif;letter-spacing:-0.01em;overflow:hidden}
+.holo.on{opacity:1}
+.holo-card,.holo-line,.holo-dot,.holo-ret{position:absolute;left:0;top:0;opacity:0;visibility:hidden;transition:opacity .25s ease,visibility 0s linear .25s;will-change:transform}
+.holo-card.show,.holo-line.show,.holo-dot.show,.holo-ret.show{opacity:1;visibility:visible;transition:opacity .35s ease}
+.holo-in{max-width:236px;padding:10px 13px 11px;border-radius:12px;box-sizing:border-box;background:#161618;border:1px solid rgba(255,255,255,.12);color:#e8e8ed;box-shadow:0 10px 30px rgba(0,0,0,.35);translate:0 5px;transition:translate .35s cubic-bezier(.2,.8,.2,1)}
+.show>.holo-in{translate:0 0}
+.holo-tag{display:flex;align-items:center;gap:7px;font:600 10px/1.3 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.07em;text-transform:uppercase;color:oklch(var(--acc-hi))}
+.holo-tag::before{content:"";flex:none;width:6px;height:6px;border-radius:2px;background:oklch(var(--acc))}
+.holo-txt{margin-top:6px;font-size:12.5px;line-height:1.42}
+.holo-fun{margin-top:5px;font-size:12px;line-height:1.35;font-style:italic;color:#a1a1a6}
+.holo-fun:empty{display:none}
+.holo-line{height:1px;transform-origin:0 50%;background:oklch(var(--acc) / .55)}
+.holo-dot{width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:oklch(var(--acc))}
+.holo-light{--acc:0.8 0.2 152;--acc-hi:0.62 0.17 152;--acc-lo:0.62 0.17 152;--acc-lo2:0.55 0.15 152}
+.holo-light .holo-in{background:#fff;border-color:#d2d2d7;color:#1d1d1f;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+.holo-light .holo-fun{color:#6e6e73}
+.holo-ret i{position:absolute;width:16px;height:16px;border:1.5px solid oklch(var(--acc) / .85)}
+.holo-ret i:nth-child(1){left:0;top:0;border-right:0;border-bottom:0}.holo-ret i:nth-child(2){right:0;top:0;border-left:0;border-bottom:0}
+.holo-ret i:nth-child(3){left:0;bottom:0;border-right:0;border-top:0}.holo-ret i:nth-child(4){right:0;bottom:0;border-left:0;border-top:0}
+.holo-lbl{position:absolute;right:calc(100% + 10px);bottom:0;padding:6px 9px;border-radius:8px;background:#161618;border:1px solid rgba(255,255,255,.12);font:600 10px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.06em;text-transform:uppercase;color:#e8e8ed;white-space:nowrap;text-align:left}
+.holo-lbl b{color:oklch(var(--acc-hi));font-weight:600}
+.lbl-right .holo-lbl{right:auto;left:calc(100% + 10px)}
+.lbl-below .holo-lbl{right:auto;left:0;bottom:auto;top:calc(100% + 8px)}
+.holo-hud .holo-in{min-width:160px;font:500 11px/1.65 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.holo-hud b{float:right;font-weight:600;color:oklch(var(--acc-hi));font-variant-numeric:tabular-nums}
+.holo-narrow .holo-in{max-width:calc(100vw - 130px)} /* leaves room for the visor and colour buttons */
+`;
+
+  holoDefs() {
+    const E = this.el, q = s => document.querySelector(s);
+    const shown = s => [...document.querySelectorAll(s)].find(e => e.getClientRects().length);
+    const hero = () => window.scrollY < window.innerHeight * 0.35;
+    const round = r => Math.abs(r.width - r.height) < r.width * 0.2 && r.width < window.innerWidth * 0.95;
+    return [
+      { id: 'halo', el: () => E.halo, round: true, ok: r => round(r) && hero(), sides: ['right', 'left', 'top', 'bottom'] },
+      { id: 'photo', el: () => E.person, face: true, ok: hero, sides: ['left', 'right', 'bottom'] },
+      { id: 'name', el: () => shown('#main h1'), ok: hero, sides: ['bottom', 'left', 'top'] },
+      // Desktop only: on a phone the hero has no room for these three
+      { id: 'font', wideOnly: true, el: () => E.left && E.left.querySelector('p'), ok: hero, sides: ['bottom', 'top', 'right'] },
+      { id: 'lang', wideOnly: true, el: () => shown('header [role="group"]'), ok: hero, sides: ['bottom', 'left'] },
+      { id: 'colour', wideOnly: true, el: () => q('button[aria-controls="halo-panel"]'), ok: hero, sides: ['left', 'top'] },
+      { id: 'carousel', el: () => E.ctrl, sides: ['top', 'bottom'] },
+      { id: 'timeline', el: () => E.halo, line: true, ok: r => r.height > r.width * 4, sides: ['right', 'left'] },
+      { id: 'dreams', el: () => E.outro && E.outro.querySelector('h2'), light: true, sides: ['bottom', 'top'] },
+      { id: 'form', el: () => q('#contact form button[type="submit"]'), light: true, sides: ['right', 'bottom', 'top'] },
+      { id: 'cv', el: () => q('#contact a[href*="cv/"]'), light: true, sides: ['bottom', 'right', 'top'] }
+    ];
+  }
+
+  // Turns the holograms on or off when the visor changes (and refreshes the texts when the language changes)
+  syncHolo() {
+    const on = !!(this.state.visor ?? (this.props.photo ?? 'Sin visor') === 'Con visor');
+    if (on && !this.hv) this.startHolo();
+    else if (!on && this.hv) this.stopHolo();
+    else if (on && this.hv && this.hv.lang !== this.state.lang) this.holoTexts();
+  }
+
+  startHolo() {
+    if (!document.getElementById('holo-css')) {
+      const st = document.createElement('style'); st.id = 'holo-css'; st.textContent = this.HOLO_CSS; document.head.appendChild(st);
+    }
+    const layer = document.createElement('div');
+    layer.className = 'holo'; layer.setAttribute('aria-hidden', 'true');
+    const mk = (cls, html) => { const d = document.createElement('div'); d.className = cls; if (html) d.innerHTML = html; layer.appendChild(d); return d; };
+    const defs = this.holoDefs().map(d => {
+      d.ln = mk('holo-line'); d.dot = mk('holo-dot');
+      d.card = mk('holo-card' + (d.light ? ' holo-light' : ''), '<div class="holo-in"><div class="holo-tag"></div><div class="holo-txt"></div><div class="holo-fun"></div></div>');
+      if (d.light) { d.ln.classList.add('holo-light'); d.dot.classList.add('holo-light'); }
+      return d;
+    });
+    const ret = mk('holo-ret', '<i></i><i></i><i></i><i></i><div class="holo-lbl"></div>');
+    const hud = mk('holo-card holo-hud', '<div class="holo-in"><div class="holo-tag"></div><div class="hud-rows"></div></div>');
+    document.body.appendChild(layer);
+    this.hv = { layer, defs, ret, hud, fps: 0, ki: 0, lang: null, raf: 0, last: 0, hudAt: 0 };
+    this.holoTexts();
+    requestAnimationFrame(() => layer.classList.add('on'));
+    const tick = now => { this.holoTick(now); if (this.hv) this.hv.raf = requestAnimationFrame(tick); };
+    this.hv.raf = requestAnimationFrame(tick);
+  }
+
+  stopHolo(now) {
+    const H = this.hv; if (!H) return;
+    this.hv = null;
+    cancelAnimationFrame(H.raf);
+    H.layer.classList.remove('on');
+    if (now) H.layer.remove(); else setTimeout(() => H.layer.remove(), 400);
+  }
+
+  holoTexts() {
+    const H = this.hv, T = this.I18N[this.state.lang];
+    H.lang = this.state.lang;
+    for (const d of H.defs) {
+      const [tag, txt, fun] = T.holo[d.id];
+      d.card.querySelector('.holo-tag').textContent = tag;
+      d.card.querySelector('.holo-txt').textContent = txt;
+      d.card.querySelector('.holo-fun').textContent = fun;
+      d.w = 0;
+    }
+    H.hud.querySelector('.holo-tag').textContent = T.holoEngine;
+    H.hudW = 0; H.ki = 0; H.lblW = 0;
+  }
+
+  // How visible an element really is: its own opacity times its ancestors' (the scroll engine fades them inline)
+  holoOpacity(el, d) {
+    const E = this.el;
+    if (!d.light && E.white && E.stage && +(E.white.style.opacity || 0) > 0.5 && E.stage.contains(el)) return 0; // under the white wash
+    let o = 1;
+    for (let n = el; n && n !== document.body; n = n.parentElement) {
+      const st = n.style;
+      if (st.visibility === 'hidden' || st.display === 'none') return 0;
+      if (st.opacity !== '') o *= +st.opacity;
+    }
+    if (d.id === 'dreams') o *= +(el.firstElementChild && el.firstElementChild.style.opacity || 0);
+    return o;
+  }
+
+  holoTick(now) {
+    const H = this.hv, E = this.el;
+    const dt = H.last ? (now - H.last) / 1000 : 0; H.last = now;
+    if (dt > 0 && dt < 0.5) H.fps = H.fps ? H.fps * 0.9 + 0.1 / dt : 1 / dt;
+    const W = window.innerWidth, VH = window.innerHeight, narrow = W < 820, top = narrow ? 62 : 74;
+    H.layer.classList.toggle('holo-narrow', narrow);
+    const off = this.pt && this.pt.open;
+
+    // 1 · Read: which elements are on screen
+    let items = [];
+    for (const d of H.defs) {
+      const el = !off && d.el();
+      const r = el && el.getBoundingClientRect();
+      const ok = r && (r.width > 0 || d.line) && r.height > 0 && !(d.wideOnly && narrow) && r.bottom > top && r.top < VH - 8 && r.right > 0 && r.left < W && (!d.ok || d.ok(r)) && this.holoOpacity(el, d) > 0.5;
+      if (ok) items.push({ d, r }); else d.vis = false;
+      if (ok && !d.w) { d.w = d.card.offsetWidth; d.h = d.card.offsetHeight; } // hidden cards still have a size
+    }
+    // Few at a time (2 on a computer, 1 on a phone): when there are more on screen they take turns every 5 s
+    const max = narrow ? 1 : 2, ids = items.map(it => it.d.id);
+    H.active = (H.active || []).filter(id => ids.includes(id));
+    if (!H.active.length) H.rotAt = now;
+    if (ids.length > max && now - H.rotAt > 5000) { H.active.shift(); H.rotAt = now; }
+    while (H.active.length < Math.min(max, ids.length)) {
+      const k = ids.indexOf(H.lastId);
+      for (let n = 1; n <= ids.length; n++) { const id = ids[(k + n + ids.length) % ids.length]; if (!H.active.includes(id)) { H.active.push(id); H.lastId = id; break; } }
+    }
+    for (const it of items) if (!H.active.includes(it.d.id)) it.d.vis = false;
+    items = items.filter(it => H.active.includes(it.d.id));
+
+    // 2 · Place each card on the side of its element with the most room, avoiding the others
+    const placed = [], G = narrow ? 20 : 34;
+    // Texts the cards should not cover (computers); on a phone the card sits at the bottom left instead
+    const obst = narrow ? [] : [E.left, E.right, E.cta, E.toggle, E.header].filter(n => n && n.style.visibility !== 'hidden' && +(n.style.opacity || 1) > 0.3)
+      .map(n => { const b = n.getBoundingClientRect(); return { x: b.left, y: b.top, w: b.width, h: b.height }; });
+    const area = (a, b) => Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x)) * Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y));
+    let faceBox = null;
+    for (const { d, r } of items) {
+      let A = { left: r.left, top: r.top, right: r.right, bottom: r.bottom, width: r.width, height: r.height };
+      if (d.face) { // the face inside the photo
+        const fx = r.left + r.width * 0.33, fy = r.top + r.height * 0.1, fw = r.width * 0.33, fh = r.height * 0.36;
+        A = { left: fx, top: fy, right: fx + fw, bottom: fy + fh, width: fw, height: fh }; faceBox = A;
+      }
+      if (d.line) { const y = Math.min(r.bottom - 20, Math.max(r.top + 20, VH * 0.42)); A = { left: r.left, right: r.right, top: y, bottom: y, width: r.width, height: 0 }; }
+      const w = d.w, h = d.h, cx = A.left + A.width / 2, cy = A.top + A.height / 2;
+      const yMid = d.round ? A.top + A.height * 0.28 - h / 2 : cy - h / 2;
+      const at = side => side === 'right' ? { x: A.right + G, y: yMid } : side === 'left' ? { x: A.left - G - w, y: yMid }
+        : side === 'top' ? { x: cx - w / 2, y: A.top - G - h } : { x: cx - w / 2, y: A.bottom + G };
+      let best = null;
+      if (narrow) best = { x: 12, y: VH - h - 16, w, h };
+      else for (const side of [...d.sides, 'right', 'left', 'bottom', 'top']) {
+        const c = at(side), x = Math.min(W - 12 - w, Math.max(12, c.x)), y = Math.min(VH - 12 - h, Math.max(top, c.y));
+        const box = { x, y, w, h };
+        let score = Math.abs(x - c.x) + Math.abs(y - c.y);
+        for (const o of placed) score += area(box, o) * 0.05;
+        for (const o of obst) score += area(box, o) * 0.03;
+        if (!d.face && !d.round) score += area(box, { x: A.left, y: A.top, w: A.width, h: A.height }) * 0.02;
+        if (!best || score < best.score) best = { ...box, score };
+      }
+      placed.push(best);
+      // Anchor point: on the ring for the halo, otherwise the point of the element nearest to the card
+      const ccx = best.x + w / 2, ccy = best.y + h / 2;
+      let px, py;
+      if (d.round) { const R = A.width / 2, a = Math.atan2(ccy - (A.top + R), ccx - (A.left + R)); px = A.left + R + Math.cos(a) * R; py = A.top + R + Math.sin(a) * R; }
+      else { px = Math.min(A.right, Math.max(A.left, ccx)); py = Math.min(A.bottom, Math.max(A.top, ccy)); }
+      d.place = { x: best.x, y: best.y, px, py, ccx, ccy };
+      d.vis = true;
+    }
+
+    // 3 · Write
+    for (const d of H.defs) {
+      const show = !!d.vis;
+      if (show !== d.shown) { d.shown = show; for (const n of [d.card, d.ln, d.dot]) n.classList.toggle('show', show); }
+      if (!show) continue;
+      const P = d.place, len = Math.hypot(P.ccx - P.px, P.ccy - P.py), ang = Math.atan2(P.ccy - P.py, P.ccx - P.px);
+      d.card.style.transform = 'translate3d(' + P.x.toFixed(1) + 'px,' + P.y.toFixed(1) + 'px,0)';
+      d.dot.style.transform = 'translate3d(' + P.px.toFixed(1) + 'px,' + P.py.toFixed(1) + 'px,0)';
+      d.ln.style.width = len.toFixed(1) + 'px';
+      d.ln.style.transform = 'translate3d(' + P.px.toFixed(1) + 'px,' + P.py.toFixed(1) + 'px,0) rotate(' + ang.toFixed(4) + 'rad)';
+    }
+
+    // Face scanner on the photo, with the ki reading
+    const T = this.I18N[this.state.lang];
+    const scan = !!faceBox;
+    if (scan !== H.scan) { H.scan = scan; H.ret.classList.toggle('show', scan); if (scan) H.ki = 0; }
+    if (scan) {
+      H.ret.style.width = faceBox.width + 'px'; H.ret.style.height = faceBox.height + 'px';
+      H.ret.style.transform = 'translate3d(' + faceBox.left.toFixed(1) + 'px,' + faceBox.top.toFixed(1) + 'px,0)';
+      // Label beside the face on whichever side has room, otherwise under it
+      const lw = H.lblW || (H.lblW = H.ret.querySelector('.holo-lbl').offsetWidth || 150);
+      const side = W - faceBox.right - 18 >= lw ? 'r' : faceBox.left - 18 >= lw ? 'l' : 'b';
+      H.ret.classList.toggle('lbl-right', side === 'r'); H.ret.classList.toggle('lbl-below', side === 'b');
+      H.ki = Math.min(9001, H.ki + dt * 6000);
+      const ki = H.ki >= 9001 ? '+9000' : String(Math.floor(H.ki));
+      H.ret.querySelector('.holo-lbl').innerHTML = T.holoSubject + '<br>' + T.holoKi + ': <b>' + ki + '</b>';
+    }
+
+    // Live engine readout (bottom left), refreshed four times a second
+    const hudOn = !off && !narrow; // computers only: on a phone it would cover the content
+    if (hudOn !== H.hudOn) { H.hudOn = hudOn; H.hud.classList.toggle('show', hudOn); }
+    const ct = document.getElementById('contact');
+    H.hud.classList.toggle('holo-light', +(E.white && E.white.style.opacity || 0) > 0.5 || !!(ct && ct.getBoundingClientRect().top < VH * 0.85)); // over the white sections
+    if (hudOn && now - H.hudAt > 250) {
+      H.hudAt = now;
+      const nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+      const load = nav && nav.loadEventEnd > 0 ? (nav.loadEventEnd / 1000).toFixed(2) + ' s' : '—';
+      let bytes = 0;
+      if (performance.getEntriesByType) for (const e of [nav, ...performance.getEntriesByType('resource')]) if (e) bytes += e.transferSize || e.encodedBodySize || 0;
+      H.hud.querySelector('.hud-rows').innerHTML = T.holoFps + ' <b>' + Math.round(Math.min(H.fps, 240)) + '</b><br>' + T.holoLoad + ' <b>' + load + '</b><br>' + T.holoWeight + ' <b>' + Math.round(bytes / 1024) + ' KB</b>';
+      if (!H.hudW) H.hudW = H.hud.offsetHeight;
+      H.hud.style.transform = 'translate3d(' + (narrow ? 12 : 24) + 'px,' + (VH - H.hudW - (narrow ? 14 : 26)) + 'px,0)';
+    }
+  }
+
+  // ════ 13. TEMPLATE VALUES ═══════════════════════════════════════════════════
   // Everything the template reads: {{ halo }}, {{ t }}, refs, handlers and computed styles
 
   renderVals() {
