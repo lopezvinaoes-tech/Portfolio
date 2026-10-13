@@ -18,10 +18,7 @@ NAME = "Santiago Lopez Viñao"
 EMAIL = "lopezvinaoes@gmail.com"
 LINKEDIN = "https://www.linkedin.com/in/santiago-lopez-vi%C3%B1ao/"
 LINKEDIN_LABEL = "linkedin.com/in/santiago-lopez-viñao"
-GITHUB = "https://github.com/lopezvinaoes-tech"
-GITHUB_LABEL = "github.com/lopezvinaoes-tech"
-WEB = "https://portfolio-six-flax-48.vercel.app/"
-WEB_LABEL = "portfolio-six-flax-48.vercel.app"
+# GitHub and the portfolio URL are left out on purpose: the CV is downloaded from the portfolio itself.
 
 CONTENT = {
     "es": {
@@ -209,14 +206,12 @@ def page(c):
   <div><h1>{esc(first)} <span>{esc(rest)}</span></h1><div class="role">{esc(c['role'])}</div></div>
   <div class="contact">{esc(c['location'])}<br>
     <a href="mailto:{EMAIL}">{EMAIL}</a><br>
-    <a href="{WEB}">{WEB_LABEL}</a><br>
-    <a href="{LINKEDIN}">{esc(LINKEDIN_LABEL)}</a><br>
-    <a href="{GITHUB}">{GITHUB_LABEL}</a></div>
+    <a href="{LINKEDIN}">{esc(LINKEDIN_LABEL)}</a></div>
 </header>
 <section><h2>{h['profile']}</h2><p>{esc(c['profile'])}</p></section>
 <section><h2>{h['education']}</h2>{edu}</section>
 <section><h2>{h['project']}</h2><div class="item"><div class="row"><span><span class="t">{esc(pr['name'])}</span>
-  <span class="m">· <a href="{WEB}">{esc(pr['meta'])}</a></span></span></div>{bullets(pr['bullets'])}</div></section>
+  <span class="m">· {esc(pr['meta'])}</span></span></div>{bullets(pr['bullets'])}</div></section>
 <section><h2>{h['skills']}</h2><div class="skills">{skills}</div></section>
 <section><h2>{h['experience']}</h2>{exp}</section>
 <section><h2>{h['more']}</h2><p>{esc(c['more'])}</p></section>
