@@ -13,6 +13,8 @@ assets/           → photos, favicon and share image (og.jpg)
 robots.txt        → lets search engines crawl the site
 sitemap.xml       → page list for Google Search Console
 vercel.json       → security headers and cache rules
+assets/cv/        → CV PDFs (ES + EN), generated — don't edit by hand
+_source/cv/       → CV source + build script (not deployed, see .vercelignore)
 ```
 
 ## React files
@@ -22,6 +24,16 @@ vercel.json       → security headers and cache rules
 ## Icons
 
 Icons are inlined in `index.html` as SVG data URIs. Inside them `viewBox` is written as `view%42ox`: the runtime rewrites camelCase attribute names it finds in the template, and the encoded form keeps it from breaking the icons. Browsers decode it back to `viewBox`.
+
+## CV
+
+The PDFs in `assets/cv/` are generated. To change the CV, edit the `CONTENT` block in `_source/cv/build_cv.py` and run:
+
+```
+python3 _source/cv/build_cv.py
+```
+
+It needs Python 3 and Playwright with Chromium. The PDF uses static Inter weights from `_source/cv/fonts/`: Chromium embeds the variable font as Type 3, which some CV parsers (ATS) read poorly.
 
 ## Caching
 
