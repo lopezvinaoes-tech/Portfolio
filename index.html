@@ -198,7 +198,24 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
     </div>
   </sc-if>
 
-  <div ref="{{ rToggle }}" style="position:absolute;right:clamp(20px,4vw,56px);bottom:clamp(30px,7vh,74px);z-index:5">
+  <div ref="{{ rToggle }}" style="position:absolute;right:clamp(20px,4vw,56px);bottom:clamp(30px,7vh,74px);z-index:5;display:flex;align-items:center;gap:10px">
+    <div style="position:relative">
+      <button type="button" onClick="{{ toggleHaloPanel }}" aria-label="{{ t.haloSettings }}" aria-expanded="{{ haloOpen }}" aria-controls="halo-panel" title="{{ t.haloSettings }}" style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border-radius:50%;cursor:pointer;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:background .3s, border-color .3s, transform .2s;background:{{ haloBtnBg }};border:1px solid {{ haloBtnBd }}" style-hover="transform:scale(1.06)" style-active="transform:scale(0.96)">
+        <span style="display:block;width:18px;height:18px;box-sizing:border-box;border-radius:50%;border:2px solid {{ haloSwatch }};box-shadow:0 0 8px {{ haloSwatch }}, inset 0 0 5px {{ haloSwatch }};transition:border-color .3s, box-shadow .3s"></span>
+      </button>
+      <div id="halo-panel" role="group" aria-label="{{ t.haloSettings }}" style="position:absolute;right:0;bottom:calc(100% + 12px);width:236px;padding:14px 14px 16px;box-sizing:border-box;border-radius:18px;background:rgba(24,24,26,0.86);border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(24px) saturate(1.4);-webkit-backdrop-filter:blur(24px) saturate(1.4);box-shadow:0 24px 60px rgba(0,0,0,0.6);display:flex;flex-direction:column;gap:14px;transform-origin:bottom right;opacity:{{ hpOp }};visibility:{{ hpVis }};transform:translateY({{ hpY }}) scale({{ hpScale }});transition:opacity .22s ease, transform .28s cubic-bezier(.2,.8,.2,1), visibility .22s">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <span style="font-size:12px;font-weight:500;letter-spacing:-0.01em;color:#86868b">{{ t.haloColor }}</span>
+          <div role="radiogroup" aria-label="{{ t.haloColor }}" style="display:flex;gap:12px">
+            <sc-for list="{{ haloColors }}" as="hc" hint-placeholder-count="4"><button type="button" role="radio" aria-checked="{{ hc.on }}" aria-label="{{ hc.label }}" title="{{ hc.label }}" onClick="{{ hc.pick }}" style="flex:none;width:30px;height:30px;padding:0;border-radius:50%;cursor:pointer;background:{{ hc.fill }};border:2px solid {{ hc.ring }};box-shadow:{{ hc.glow }};transition:box-shadow .2s, border-color .2s, transform .2s" style-hover="transform:scale(1.08)"></button></sc-for>
+          </div>
+        </div>
+        <label style="display:flex;flex-direction:column;gap:8px">
+          <span style="display:flex;justify-content:space-between;font-size:12px;font-weight:500;letter-spacing:-0.01em;color:#86868b"><span>{{ t.haloIntensity }}</span><span style="color:#f5f5f7;font-variant-numeric:tabular-nums">{{ haloPct }}</span></span>
+          <input type="range" min="0" max="100" step="1" value="{{ haloLevel }}" onChange="{{ onHaloLevel }}" aria-label="{{ t.haloIntensity }}" style="width:100%;margin:0;cursor:pointer;accent-color:{{ haloSwatch }}">
+        </label>
+      </div>
+    </div>
     <button onClick="{{ toggleVisor }}" aria-label="{{ t.visorLabel }}" aria-pressed="{{ visor }}" title="{{ visorTitle }}" style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border-radius:50%;cursor:pointer;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:background .3s, border-color .3s, box-shadow .3s, transform .2s;background:{{ visorBg }};border:1px solid {{ visorBd }};box-shadow:{{ visorGlow }}" style-hover="transform:scale(1.06)" style-active="transform:scale(0.96)">
       <span style="display:block;width:22px;height:22px;-webkit-mask:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 view%42ox=%270 0 24 24%27 fill=%27none%27 stroke=%27%23000%27 stroke-width=%271.7%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27M2.5 9.5h19%27%3E%3C/path%3E%3Cpath d=%27M3 9.5c0 3.2 1.4 5 4 5 2.3 0 3.4-1.5 3.9-3.6.3-1 1.9-1 2.2 0 .5 2.1 1.6 3.6 3.9 3.6 2.6 0 4-1.8 4-5%27%3E%3C/path%3E%3Cpath d=%27M2.5 9.5 1.5 7.5M21.5 9.5l1-2%27%3E%3C/path%3E%3C/svg%3E') center/contain no-repeat;mask:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 view%42ox=%270 0 24 24%27 fill=%27none%27 stroke=%27%23000%27 stroke-width=%271.7%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27M2.5 9.5h19%27%3E%3C/path%3E%3Cpath d=%27M3 9.5c0 3.2 1.4 5 4 5 2.3 0 3.4-1.5 3.9-3.6.3-1 1.9-1 2.2 0 .5 2.1 1.6 3.6 3.9 3.6 2.6 0 4-1.8 4-5%27%3E%3C/path%3E%3Cpath d=%27M2.5 9.5 1.5 7.5M21.5 9.5l1-2%27%3E%3C/path%3E%3C/svg%3E') center/contain no-repeat;transition:background .3s;background:{{ visorFg }}"></span>
     </button>
@@ -409,7 +426,30 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;photo&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Con visor&quot;,&quot;Sin visor&quot;],&quot;default&quot;:&quot;Sin visor&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Foto&quot;},&quot;animate&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Halo&quot;},&quot;web3formsKey&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Formulario&quot;}}">
 class Component extends DCLogic {
-  state = { w: typeof window !== 'undefined' ? window.innerWidth : 1440, lang: this.detectLang() };
+  state = { w: typeof window !== 'undefined' ? window.innerWidth : 1440, lang: this.detectLang(), haloOpen: false, ...this.readHalo() };
+  // Halo colours. 'swatch' is the solid colour used for the buttons.
+  HALO_TONES = {
+    white: { core: '#ffffff', g: a => 'oklch(0.96 0.02 240 / ' + a + ')', swatch: '#f5f5f7' },
+    green: { core: 'oklch(0.95 0.09 155)', g: a => 'oklch(0.8 0.2 152 / ' + a + ')', swatch: 'oklch(0.8 0.2 152)' },
+    red: { core: 'oklch(0.93 0.06 25)', g: a => 'oklch(0.68 0.22 25 / ' + a + ')', swatch: 'oklch(0.68 0.22 25)' },
+    blue: { core: 'oklch(0.92 0.07 250)', g: a => 'oklch(0.72 0.17 255 / ' + a + ')', swatch: 'oklch(0.72 0.17 255)' }
+  };
+  // Saved halo choice (colour null = automatic: white, or green with the visor on). Level 0–100, 50 = default look.
+  readHalo() {
+    let haloColor = null, haloLevel = 50;
+    try {
+      const c = localStorage.getItem('haloColor'); if (['white', 'green', 'red', 'blue'].includes(c)) haloColor = c;
+      const l = parseInt(localStorage.getItem('haloLevel'), 10); if (l >= 0 && l <= 100) haloLevel = l;
+    } catch (_) {}
+    return { haloColor, haloLevel };
+  }
+  // Slider 0–100 → glow multiplier 0.25–1.8 (50 → 1, the original look)
+  haloFactor() { const v = this.state.haloLevel ?? 50; return v <= 50 ? 0.25 + 0.75 * (v / 50) : 1 + 0.8 * ((v - 50) / 50); }
+  setHalo(patch) {
+    try { for (const k in patch) localStorage.setItem(k, String(patch[k])); } catch (_) {}
+    this.dirty = true;
+    this.setState(patch);
+  }
   el = {};
   _r = {};
   cardEls = [];
@@ -455,6 +495,8 @@ class Component extends DCLogic {
       send: 'Send idea', sending: 'Sending…',
       thanks: 'Thank you', onItsWay: "Your idea is on its way. I'll get back to you soon.", sendAnother: 'Send another idea',
       location: 'Barcelona, Spain',
+      haloSettings: 'Halo settings', haloColor: 'Halo colour', haloIntensity: 'Intensity',
+      haloNames: { white: 'White', green: 'Green', red: 'Red', blue: 'Blue' },
       privacy: "I'll only use your details to reply to you. The form is sent through Web3Forms and protected by hCaptcha.",
       err: {
         idea: 'Tell me a little about your idea first.', name: 'Please add your name.',
@@ -498,6 +540,8 @@ class Component extends DCLogic {
       send: 'Enviar idea', sending: 'Enviando…',
       thanks: 'Gracias', onItsWay: 'Tu idea va de camino. Te responderé pronto.', sendAnother: 'Enviar otra idea',
       location: 'Barcelona, España',
+      haloSettings: 'Ajustes del halo', haloColor: 'Color del halo', haloIntensity: 'Intensidad',
+      haloNames: { white: 'Blanco', green: 'Verde', red: 'Rojo', blue: 'Azul' },
       privacy: 'Solo usaré tus datos para responderte. El formulario se envía a través de Web3Forms y está protegido con hCaptcha.',
       err: {
         idea: 'Cuéntame un poco tu idea primero.', name: 'Añade tu nombre, por favor.',
@@ -538,14 +582,16 @@ class Component extends DCLogic {
   componentDidMount() {
     this.applyDocLang(this.state.lang);
     this.onResize = () => { this.m = null; this.dirty = true; this.setState({ w: window.innerWidth }); this.kick(); };
-    this.onScroll = () => { if (this.state.menuOpen) this.setState({ menuOpen: false }); this.kick(); this.trackScroll(); };
+    this.onScroll = () => { if (this.state.menuOpen || this.state.haloOpen) this.setState({ menuOpen: false, haloOpen: false }); this.kick(); this.trackScroll(); };
     this.onTS = () => { this.touching = true; clearTimeout(this.snapT); if (this.snapping) this.stopSnap(); };
     this.onTE = () => { this.touching = false; clearTimeout(this.snapT); this.snapT = setTimeout(this.snap, 140); };
     this.onWh = e => { if (this.snapping && Math.abs(e.deltaY) > Math.abs(e.deltaX)) this.stopSnap(); };
-    this.onKey = e => { if (e.key === 'Escape' && (this.state.menuOpen || this.state.contactOpen)) { clearTimeout(this.ct); this.setState({ menuOpen: false, contactOpen: false }); return; } if (!this.live) return; if (e.key === 'ArrowRight') this.go(1); else if (e.key === 'ArrowLeft') this.go(-1); };
+    this.onKey = e => { if (e.key === 'Escape' && (this.state.menuOpen || this.state.contactOpen || this.state.haloOpen)) { clearTimeout(this.ct); this.setState({ menuOpen: false, contactOpen: false, haloOpen: false }); return; } if (!this.live) return; if (e.key === 'ArrowRight') this.go(1); else if (e.key === 'ArrowLeft') this.go(-1); };
     window.addEventListener('resize', this.onResize);
     window.addEventListener('scroll', this.onScroll, { passive: true });
     window.addEventListener('keydown', this.onKey);
+    this.onDocDown = e => { if (this.state.haloOpen && this.el.toggle && !this.el.toggle.contains(e.target)) this.setState({ haloOpen: false }); };
+    document.addEventListener('pointerdown', this.onDocDown);
     window.addEventListener('touchstart', this.onTS, { passive: true });
     window.addEventListener('touchend', this.onTE, { passive: true });
     window.addEventListener('touchcancel', this.onTE, { passive: true });
@@ -591,6 +637,7 @@ class Component extends DCLogic {
     window.removeEventListener('resize', this.onResize);
     window.removeEventListener('scroll', this.onScroll);
     window.removeEventListener('keydown', this.onKey);
+    document.removeEventListener('pointerdown', this.onDocDown);
     window.removeEventListener('pointermove', this.onMove);
     window.removeEventListener('pointerup', this.onUp);
     window.removeEventListener('pointercancel', this.onUp);
@@ -832,10 +879,11 @@ class Component extends DCLogic {
     if (O1 > 0) kc = lerp(1, 1.6, O2);
     if (hq >= 0) kc = lerp(kAt(sk.s0), 1.6, hq);
     if (E.halo) this.placeHalo(cx, cy, hw, hh);
-    if (E.hSpin) E.hSpin.style.opacity = Math.min(1, 0.9 * kc) * (1 - clamp(mt * 2));
-    if (E.hGlow) E.hGlow.style.opacity = (kc / 1.6) * (1 - clamp(mt * 1.5));
-    if (E.hSh1) E.hSh1.style.opacity = Math.min(1, kc);
-    if (E.hSh2) E.hSh2.style.opacity = clamp((kc - 1) / 0.6);
+    const kh = kc * this.haloFactor(); // visitor's intensity setting
+    if (E.hSpin) E.hSpin.style.opacity = Math.min(1, 0.9 * kh) * (1 - clamp(mt * 2));
+    if (E.hGlow) E.hGlow.style.opacity = Math.min(1, kh / 1.6) * (1 - clamp(mt * 1.5));
+    if (E.hSh1) E.hSh1.style.opacity = Math.min(1, kh);
+    if (E.hSh2) E.hSh2.style.opacity = clamp((kh - 1) / 0.6);
     if (E.hFill) E.hFill.style.opacity = sstep(0.05, 0.6, O2);
     const wash = sstep(0.7, 0.98, O2);
     if (E.white) E.white.style.opacity = wash;
@@ -1027,14 +1075,14 @@ class Component extends DCLogic {
   }
   tone() {
     const visor = this.state.visor ?? (this.props.photo ?? 'Sin visor') === 'Con visor';
-    const t = visor ? 'Verde' : 'Blanco';
-    if (t === 'Blanco') return { core: '#ffffff', g: a => 'oklch(0.96 0.02 240 / ' + a + ')' };
-    if (t === 'Azul') return { core: 'oklch(0.92 0.07 250)', g: a => 'oklch(0.72 0.17 255 / ' + a + ')' };
-    return { core: 'oklch(0.95 0.09 155)', g: a => 'oklch(0.8 0.2 152 / ' + a + ')' };
+    const key = this.state.haloColor || (visor ? 'green' : 'white');
+    return { key, ...this.HALO_TONES[key] };
   }
   renderVals() {
     const h = React.createElement;
-    const { core, g } = this.tone();
+    const { core, g: g0, key: haloKey, swatch } = this.tone();
+    const boost = Math.max(1, this.haloFactor());
+    const g = a => g0(Math.min(1, +(a * boost).toFixed(3)));
     const anim = this.props.animate ?? true;
     const shd = al => ['0 0 10px 1px ', '0 0 40px 6px ', '0 0 120px 24px ', 'inset 0 0 10px 1px ', 'inset 0 0 50px 8px '].map((p, i) => p + g(al[i])).join(', ');
     const abs = { position: 'absolute', inset: 0, borderRadius: '50%' };
@@ -1060,6 +1108,22 @@ class Component extends DCLogic {
       enBg: lang === 'en' ? 'rgba(255,255,255,0.16)' : segOff, enFg: lang === 'en' ? segOn : '#86868b',
       esBg: lang === 'es' ? 'rgba(255,255,255,0.16)' : segOff, esFg: lang === 'es' ? segOn : '#86868b',
       halo, wide, narrow: !wide, visor, noVisor: !visor, projects: this.projects,
+      haloOpen: !!this.state.haloOpen,
+      toggleHaloPanel: () => this.setState(st => ({ haloOpen: !st.haloOpen })),
+      hpOp: this.state.haloOpen ? 1 : 0, hpVis: this.state.haloOpen ? 'visible' : 'hidden',
+      hpY: this.state.haloOpen ? '0px' : '6px', hpScale: this.state.haloOpen ? 1 : 0.97,
+      haloSwatch: swatch,
+      haloBtnBg: this.state.haloOpen ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.08)',
+      haloBtnBd: this.state.haloOpen ? 'rgba(255,255,255,0.32)' : 'rgba(255,255,255,0.16)',
+      haloColors: Object.keys(this.HALO_TONES).map(k => {
+        const on = k === haloKey, sw = this.HALO_TONES[k].swatch;
+        return { label: T.haloNames[k], on, fill: sw, ring: on ? '#f5f5f7' : 'rgba(255,255,255,0.14)',
+          glow: on ? '0 0 0 3px rgba(24,24,26,0.9), 0 0 0 4px ' + sw + ', 0 0 14px ' + sw : 'none',
+          pick: () => this.setHalo({ haloColor: k }) };
+      }),
+      haloLevel: this.state.haloLevel ?? 50,
+      haloPct: Math.round(this.haloFactor() * 100) + (lang === 'es' ? '\u00a0%' : '%'),
+      onHaloLevel: e => this.setHalo({ haloLevel: Math.max(0, Math.min(100, parseInt(e.target.value, 10) || 0)) }),
       rWrap: r('wrap'), rStage: r('stage'), rAmb: r('amb'), rHalo: r('halo'), rPerson: r('person'),
       rLeft: r('left'), rRight: r('right'), rNarrow: r('narrow'), rToggle: r('toggle'), rCta: r('cta'),
       rTitle: r('title'), rLayer: r('layer'), rCtrl: r('ctrl'), rThumb: r('thumb'), rPrev: r('prev'), rNext: r('next'),
