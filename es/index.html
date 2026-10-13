@@ -1000,15 +1000,18 @@ class Component extends DCLogic {
     tl.style.visibility = s < sT - 0.02 ? 'hidden' : 'visible';
     if (E.tlFade) E.tlFade.style.opacity = clamp((s - sT) / 0.3) * (1 - clamp((s - this.sO) / 0.4)) * hideTl;
     const tone = this.props.haloTone ?? 'Verde';
+    const tl_tone = this.tone();
     for (const r of this.rows) {
       const y = ty + r.y * TS;
       const rv = 1 - sstep(sh * 0.62, sh * 0.96, y);
       for (const el of r.sides) { el.style.opacity = rv; el.style.transform = 'translateY(' + (1 - rv) * 28 + 'px)'; }
       if (!r.dot) continue;
       const lit = y < sh * 0.58;
-      if (r.key === lit) continue;
-      r.key = lit;
-      const G = a => 'oklch(0.8 0.2 152 / ' + a + ')';
+      // Active dots, ticks, years and titles follow the halo colour
+      const rk = (lit ? 1 : 0) + '|' + tl_tone.key;
+      if (r.key === rk) continue;
+      r.key = rk;
+      const G = tl_tone.g;
       r.dot.style.background = lit ? G(1) : '#000';
       r.dot.style.borderColor = lit ? G(1) : 'rgba(255,255,255,0.35)';
       r.dot.style.boxShadow = lit ? '0 0 0 4px ' + G(0.15) + ', 0 0 18px 2px ' + G(0.8) : 'none';
