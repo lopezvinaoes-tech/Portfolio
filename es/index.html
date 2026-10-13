@@ -113,6 +113,8 @@ html,body{margin:0;background:#000;-webkit-font-smoothing:antialiased}
 a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
 @keyframes haloSpin{to{transform:rotate(360deg)}}
 @keyframes haloBreath{0%,100%{opacity:.75;transform:scale(1)}50%{opacity:1;transform:scale(1.015)}}
+/* Neon ignition when the page opens: quick flashes, a short blackout, a last stutter, then steady */
+@keyframes haloNeon{0%{opacity:0}5%{opacity:.85}7%{opacity:.04}11%{opacity:.7}12.5%{opacity:.08}25%{opacity:.06}27%{opacity:1}30%{opacity:.22}33%{opacity:.95}46%{opacity:.95}48%{opacity:.35}51%{opacity:1}100%{opacity:1}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}}
 </style>
 </helmet>
@@ -224,8 +226,8 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
     </sc-if>
   </header>
 
-  <!-- ── HERO: halo ring (built in renderVals → halo) ──────────────────────── -->
-  <div ref="{{ rHalo }}" style="position:absolute;left:50%;top:48.08%;width:74.07vh;height:74.07vh;transform:translate(-50%,-50%);z-index:1;pointer-events:none">{{ halo }}</div>
+  <!-- ── HERO: halo ring (built in renderVals → halo); switches on like a neon tube (haloNeon) ──────────────────────── -->
+  <div ref="{{ rHalo }}" style="position:absolute;left:50%;top:48.08%;width:74.07vh;height:74.07vh;transform:translate(-50%,-50%);z-index:1;pointer-events:none;animation:haloNeon 1.8s linear .35s both">{{ halo }}</div>
 
   <!-- ── HERO: photo — no visor / green visor / red visor ──────────────────── -->
   <div ref="{{ rPerson }}" style="position:absolute;left:50%;bottom:0;height:88%;aspect-ratio:1225/1368;transform:translateX(-55%);transform-origin:55% 41%;will-change:transform,opacity;z-index:2">
