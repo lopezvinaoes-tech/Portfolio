@@ -9,6 +9,8 @@
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
 <style>
 @font-face{font-family:Inter;font-style:normal;font-weight:100 900;font-display:swap;src:url(/assets/fonts/inter-latin-var.woff2) format("woff2")}
+:root{--acc:0.8 0.2 152}
+:root[data-accent="red"]{--acc:0.68 0.22 25}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:#000;color:#f5f5f7;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 body{display:flex;align-items:center;justify-content:center;padding:24px 16px;overflow:hidden}
@@ -20,14 +22,14 @@ main{position:relative;text-align:center;display:flex;flex-direction:column;alig
 @keyframes breath{0%,100%{opacity:.4;transform:translate(-50%,-50%) scale(1)}50%{opacity:.6;transform:translate(-50%,-50%) scale(1.015)}}
 @media (prefers-reduced-motion:reduce){.halo{animation:none}}
 .code{position:relative;margin:0;font-size:clamp(88px,22vw,180px);line-height:.9;font-weight:600;letter-spacing:-.06em;
-  color:oklch(0.8 0.2 152);text-shadow:0 0 18px oklch(0.8 0.2 152 / .55),0 0 48px oklch(0.8 0.2 152 / .3)}
+  color:oklch(var(--acc));text-shadow:0 0 18px oklch(var(--acc) / .55),0 0 48px oklch(var(--acc) / .3)}
 h1{position:relative;margin:0;font-size:clamp(28px,5vw,44px);line-height:1.02;font-weight:600;letter-spacing:-.045em}
 h1 span{color:#86868b}
 p{position:relative;margin:0;font-size:17px;line-height:1.5;letter-spacing:-.02em;color:#a1a1a6;text-wrap:pretty}
 a.home{position:relative;margin-top:8px;display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 20px 0 24px;border-radius:999px;
   background:#f5f5f7;color:#000;text-decoration:none;font-size:16px;font-weight:500;letter-spacing:-.03em;transition:transform .2s,background .2s}
 a.home:hover{background:#fff;transform:scale(1.03)}
-a.home:focus-visible{outline:2px solid oklch(0.8 0.2 152);outline-offset:3px}
+a.home:focus-visible{outline:2px solid oklch(var(--acc));outline-offset:3px}
 a.home i{display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#000;color:#fff;font-style:normal;font-size:13px}
 [data-es],a.home[data-es]{display:none}
 html[lang="es"] [data-en]{display:none}
@@ -48,6 +50,7 @@ html[lang="es"] a.home[data-es]{display:inline-flex}
       }
     }
     document.documentElement.lang = lang;
+    try { if (localStorage.getItem('haloColor') === 'red') document.documentElement.setAttribute('data-accent', 'red'); } catch (_) {}
     if (lang === 'es') document.title = 'Página no encontrada — Santiago Lopez Viñao';
   })();
 </script>

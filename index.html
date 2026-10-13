@@ -24,10 +24,14 @@
 <link rel="preload" as="image" type="image/webp" href="assets/person-novisor-960.webp?v=2" imagesrcset="assets/person-novisor-640.webp?v=2 640w, assets/person-novisor-960.webp?v=2 960w" imagesizes="(max-width: 820px) 80vw, 80vh" fetchpriority="high">
 <style>
 @font-face{font-family:Inter;font-style:normal;font-weight:100 900;font-display:swap;src:url(assets/fonts/inter-latin-var.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+/* Accent colour: green by default, red when the visitor picks the red halo */
+:root{--acc:0.8 0.2 152;--acc-hi:0.85 0.17 152;--acc-lo:0.62 0.17 152;--acc-lo2:0.55 0.15 152}
+:root[data-accent="red"]{--acc:0.68 0.22 25;--acc-hi:0.76 0.17 25;--acc-lo:0.58 0.21 25;--acc-lo2:0.55 0.2 25}
 html,body{margin:0;background:#000}
 x-dc{display:none}
-a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid oklch(0.8 0.2 152);outline-offset:3px}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid oklch(var(--acc));outline-offset:3px}
 </style>
+<script>try{if(localStorage.getItem('haloColor')==='red')document.documentElement.setAttribute('data-accent','red')}catch(_){}</script>
 <!-- React is served from this site. If the files are missing or don't match the hash, support.js falls back to unpkg automatically. -->
 <script src="assets/vendor/react-18.3.1.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" defer></script>
 <script src="assets/vendor/react-dom-18.3.1.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" defer></script>
@@ -120,9 +124,9 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
         </div>
       </div>
       <div role="group" aria-label="{{ t.langLabel }}" style="flex:none;display:flex;align-items:center;gap:2px;height:34px;padding:3px;box-sizing:border-box;border-radius:999px;border:1px solid rgba(255,255,255,0.16);background:rgba(255,255,255,0.04);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)"><button type="button" onClick="{{ setEn }}" aria-pressed="{{ isEn }}" aria-label="English" lang="en" style="height:26px;min-width:34px;padding:0 9px;border:0;border-radius:999px;cursor:pointer;font:600 12px Inter,system-ui,sans-serif;letter-spacing:0;background:{{ enBg }};color:{{ enFg }};transition:background .2s, color .2s">EN</button><button type="button" onClick="{{ setEs }}" aria-pressed="{{ isEs }}" aria-label="Español" lang="es" style="height:26px;min-width:34px;padding:0 9px;border:0;border-radius:999px;cursor:pointer;font:600 12px Inter,system-ui,sans-serif;letter-spacing:0;background:{{ esBg }};color:{{ esFg }};transition:background .2s, color .2s">ES</button></div>
-      <a href="#contact" onClick="{{ goHire }}" style="display:flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:999px;background:oklch(0.8 0.2 152 / 0.14);border:1px solid oklch(0.8 0.2 152 / 0.35);color:oklch(0.85 0.17 152);font-size:13px;font-weight:500;letter-spacing:-0.02em;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)" style-hover="background:oklch(0.8 0.2 152 / 0.22)">
-        <span style="width:7px;height:7px;border-radius:50%;background:oklch(0.8 0.2 152);box-shadow:0 0 8px oklch(0.8 0.2 152)"></span>
-        <span style="color:oklch(0.85 0.17 152)">{{ t.hire }}</span>
+      <a href="#contact" onClick="{{ goHire }}" style="display:flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:999px;background:oklch(var(--acc) / 0.14);border:1px solid oklch(var(--acc) / 0.35);color:oklch(var(--acc-hi));font-size:13px;font-weight:500;letter-spacing:-0.02em;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)" style-hover="background:oklch(var(--acc) / 0.22)">
+        <span style="width:7px;height:7px;border-radius:50%;background:oklch(var(--acc));box-shadow:0 0 8px oklch(var(--acc))"></span>
+        <span style="color:oklch(var(--acc-hi))">{{ t.hire }}</span>
       </a>
     </nav>
     </sc-if>
@@ -161,9 +165,9 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
             <span style="font-size:14px;font-weight:500;letter-spacing:-0.02em;color:#f5f5f7;white-space:nowrap">{{ t.downloadCv }}</span>
             <span style="margin-left:auto;display:flex;gap:8px"><a href="assets/cv/Santiago-Lopez-CV-EN.pdf" download="Santiago-Lopez-CV-EN.pdf" hreflang="en" aria-label="{{ t.cvEn }}" onClick="{{ closeMenu }}" style="display:flex;align-items:center;justify-content:center;min-width:44px;height:40px;padding:0 12px;border-radius:999px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.12);font-size:14px;font-weight:600;letter-spacing:0;color:#f5f5f7" style-hover="background:rgba(255,255,255,0.16)">EN</a><a href="assets/cv/Santiago-Lopez-CV-ES.pdf" download="Santiago-Lopez-CV-ES.pdf" hreflang="es" aria-label="{{ t.cvEs }}" onClick="{{ closeMenu }}" style="display:flex;align-items:center;justify-content:center;min-width:44px;height:40px;padding:0 12px;border-radius:999px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.12);font-size:14px;font-weight:600;letter-spacing:0;color:#f5f5f7" style-hover="background:rgba(255,255,255,0.16)">ES</a></span>
           </div>
-          <a href="#contact" onClick="{{ mHire }}" style="margin:10px 8px 8px;height:50px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;background:oklch(0.8 0.2 152 / 0.14);border:1px solid oklch(0.8 0.2 152 / 0.35);font-size:15px;font-weight:500;letter-spacing:-0.02em;color:oklch(0.85 0.17 152)">
-            <span style="width:7px;height:7px;border-radius:50%;background:oklch(0.8 0.2 152);box-shadow:0 0 8px oklch(0.8 0.2 152)"></span>
-            <span style="color:oklch(0.85 0.17 152)">{{ t.hire }}</span>
+          <a href="#contact" onClick="{{ mHire }}" style="margin:10px 8px 8px;height:50px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;background:oklch(var(--acc) / 0.14);border:1px solid oklch(var(--acc) / 0.35);font-size:15px;font-weight:500;letter-spacing:-0.02em;color:oklch(var(--acc-hi))">
+            <span style="width:7px;height:7px;border-radius:50%;background:oklch(var(--acc));box-shadow:0 0 8px oklch(var(--acc))"></span>
+            <span style="color:oklch(var(--acc-hi))">{{ t.hire }}</span>
           </a>
         </div>
       </div>
@@ -185,7 +189,7 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
   <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
     <div ref="{{ rLeft }}" style="position:absolute;left:clamp(20px,4vw,56px);top:50%;transform:translateY(-50%);z-index:3;display:flex;flex-direction:column;gap:14px">
       <span style="font-size: 23px; font-weight: 500; letter-spacing: -0.01em; color: #86868b">{{ t.iAm }}</span>
-      <p style="margin:0;position:relative;top:{{ t.heroTop }};font-size:{{ t.heroSize }};line-height:{{ t.heroLh }};font-weight:600;letter-spacing:-0.05em"><span style="color:oklch(0.8 0.2 152);text-shadow:0 0 18px oklch(0.8 0.2 152 / 0.55), 0 0 48px oklch(0.8 0.2 152 / 0.3)">{{ t.heroA }}</span><br><span style="color:#86868b">{{ t.heroB }}</span></p>
+      <p style="margin:0;position:relative;top:{{ t.heroTop }};font-size:{{ t.heroSize }};line-height:{{ t.heroLh }};font-weight:600;letter-spacing:-0.05em"><span style="color:oklch(var(--acc));text-shadow:0 0 18px oklch(var(--acc) / 0.55), 0 0 48px oklch(var(--acc) / 0.3)">{{ t.heroA }}</span><br><span style="color:#86868b">{{ t.heroB }}</span></p>
     </div>
     <div ref="{{ rRight }}" style="position:absolute;right:clamp(20px,4vw,56px);top:50%;transform:translateY(-50%);z-index:3;text-align:right;display:flex;flex-direction:column;gap:14px;align-items:flex-end">
       <span style="font-size:13px;font-weight:500;letter-spacing:-0.01em;color:#86868b"><br></span><h1 style="margin: 0; font-size: clamp(33px,4.4vw,88px); line-height: 0.95; font-weight: 600; letter-spacing: -0.05em; font-style: normal">Santiago<br><span style="color: #86868b; font-size: 0.89em">Lopez V.</span></h1>
@@ -193,7 +197,7 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
   </sc-if>
   <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
     <div ref="{{ rNarrow }}" style="position:absolute;left:0;right:0;top:92px;z-index:3;text-align:center;display:flex;flex-direction:column;gap:6px;padding:0 20px">
-      <span style="font-size:14px;font-weight:500;letter-spacing:-0.02em;color:#86868b"><span style="color:oklch(0.8 0.2 152)">{{ t.heroA }}</span> {{ t.heroBShort }}</span>
+      <span style="font-size:14px;font-weight:500;letter-spacing:-0.02em;color:#86868b"><span style="color:oklch(var(--acc))">{{ t.heroA }}</span> {{ t.heroBShort }}</span>
       <h1 style="margin:0;font-size:clamp(40px,11vw,64px);line-height:0.95;font-weight:600;letter-spacing:-0.05em">Santiago <span style="color:#86868b">Lopez V.</span></h1>
     </div>
   </sc-if>
@@ -230,17 +234,17 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
   </sc-if>
 
   <div ref="{{ rTitle }}" id="projects" style="position:absolute;left:0;right:0;top:clamp(84px,11vh,120px);z-index:3;opacity:0;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:0 20px;pointer-events:none">
-    <span style="font-size:15px;font-weight:500;letter-spacing:-0.02em;color:oklch(0.85 0.17 152)">{{ t.projects }}</span>
+    <span style="font-size:15px;font-weight:500;letter-spacing:-0.02em;color:oklch(var(--acc-hi))">{{ t.projects }}</span>
     <h2 style="margin:0;font-size:clamp(40px,4.6vw,68px);line-height:0.95;font-weight:600;letter-spacing:-0.05em">{{ t.comingA }} <span style="color:#86868b">{{ t.comingB }}</span></h2>
   </div>
 
   <div ref="{{ rLayer }}" onPointerDown="{{ onDown }}" onWheel="{{ onWheel }}" style="position:absolute;inset:0;z-index:3;pointer-events:none;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab">
     <sc-for list="{{ projects }}" as="p" hint-placeholder-count="0">
       <div ref="{{ p.ref }}" style="position:absolute;left:0;top:0;width:190px;height:320px;opacity:0;visibility:hidden;transform-origin:50% 100%;will-change:transform,opacity;box-sizing:border-box;border-radius:22px;overflow:hidden;background:linear-gradient(180deg,#1a1a1c 0%,#0b0b0c 100%);border:1px solid rgba(255,255,255,0.1);box-shadow:0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);display:flex;flex-direction:column;justify-content:space-between;padding:18px">
-        <div style="position:absolute;left:0;right:0;bottom:0;height:65%;background:radial-gradient(90% 70% at 50% 120%, oklch(0.8 0.2 152 / 0.22), rgba(0,0,0,0) 70%);pointer-events:none"></div>
+        <div style="position:absolute;left:0;right:0;bottom:0;height:65%;background:radial-gradient(90% 70% at 50% 120%, oklch(var(--acc) / 0.22), rgba(0,0,0,0) 70%);pointer-events:none"></div>
         <div style="position:relative;display:flex;justify-content:space-between;align-items:center">
           <span style="font-size:12px;font-weight:500;letter-spacing:-0.01em;color:#86868b">{{ t.project }}</span>
-          <span style="height:22px;padding:0 9px;display:flex;align-items:center;border-radius:999px;background:oklch(0.8 0.2 152 / 0.12);color:oklch(0.85 0.17 152);font-size:11px;font-weight:500;letter-spacing:-0.01em">{{ t.soon }}</span>
+          <span style="height:22px;padding:0 9px;display:flex;align-items:center;border-radius:999px;background:oklch(var(--acc) / 0.12);color:oklch(var(--acc-hi));font-size:11px;font-weight:500;letter-spacing:-0.01em">{{ t.soon }}</span>
         </div>
         <span style="position:relative;font-size:56px;font-weight:600;line-height:0.9;letter-spacing:-0.06em;color:#f5f5f7">{{ p.n }}</span>
       </div>
@@ -259,7 +263,7 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
   <div ref="{{ rTl }}" id="about" data-screen-label="About" style="position:absolute;left:0;right:0;top:0;z-index:3;visibility:hidden;transform:translateY(100vh);display:flex;flex-direction:column;gap:clamp(72px,13vh,150px);padding:0 clamp(20px,4vw,56px);box-sizing:border-box">
     <div data-tl-row style="position:relative;display:grid;grid-template-columns:minmax(0,1fr) 120px minmax(0,1fr);align-items:start">
       <div data-tl-side="left" style="grid-column:1;grid-row:1;justify-self:end;text-align:right;display:flex;flex-direction:column;gap:12px;align-items:flex-end;max-width:440px">
-        <span style="font-size:15px;font-weight:500;letter-spacing:-0.02em;color:oklch(0.85 0.17 152)">{{ t.about }}</span>
+        <span style="font-size:15px;font-weight:500;letter-spacing:-0.02em;color:oklch(var(--acc-hi))">{{ t.about }}</span>
         <h2 style="margin:0;font-size:clamp(40px,4.6vw,68px);line-height:0.95;font-weight:600;letter-spacing:-0.05em">{{ t.whoA }} <span style="color:#86868b">{{ t.whoB }}</span></h2>
       </div>
       <div data-tl-side="right" style="grid-column:3;grid-row:1;justify-self:start;max-width:440px;padding-top:30px">
@@ -359,7 +363,7 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
 <section id="contact" data-screen-label="Contact" style="background:#fff;color:#1d1d1f;font-family:Inter,system-ui,sans-serif;letter-spacing:-0.05em;padding:clamp(48px,10vh,120px) clamp(20px,4vw,56px) 40px">
   <div style="max-width:1120px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:clamp(36px,6vw,88px);align-items:start">
     <div style="display:flex;flex-direction:column;gap:18px">
-      <span style="font-size:15px;font-weight:500;letter-spacing:-0.02em;color:oklch(0.55 0.15 152)">{{ t.ideasBox }}</span>
+      <span style="font-size:15px;font-weight:500;letter-spacing:-0.02em;color:oklch(var(--acc-lo2))">{{ t.ideasBox }}</span>
       <h2 style="margin:0;font-size:clamp(40px,4.6vw,68px);line-height:0.95;font-weight:600;letter-spacing:-0.05em;color:#1d1d1f">{{ t.gotIdea }}<br><span style="color:#86868b">{{ t.buildIt }}</span></h2>
       <p style="margin:0;max-width:440px;font-size:18px;line-height:1.5;letter-spacing:-0.02em;color:#6e6e73;text-wrap:pretty">{{ t.contactIntro }}</p>
       <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px">
@@ -381,16 +385,16 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
           </div>
           <label style="display:flex;flex-direction:column;gap:8px">
             <span style="font-size:13px;font-weight:500;letter-spacing:-0.01em;color:#6e6e73">{{ t.yourIdea }}</span>
-            <textarea value="{{ idea }}" onChange="{{ onIdea }}" rows="5" maxlength="4000" placeholder="{{ t.ideaPh }}" style="width:100%;box-sizing:border-box;border-radius:14px;border:1px solid #d2d2d7;background:#fff;color:#1d1d1f;font:400 16px Inter,system-ui,sans-serif;letter-spacing:-0.02em;outline:none;transition:border-color .2s, box-shadow .2s;height:auto;min-height:140px;padding:14px 16px;line-height:1.45;resize:vertical" style-focus="border-color:oklch(0.62 0.17 152);box-shadow:0 0 0 4px oklch(0.8 0.2 152 / 0.18)"></textarea>
+            <textarea value="{{ idea }}" onChange="{{ onIdea }}" rows="5" maxlength="4000" placeholder="{{ t.ideaPh }}" style="width:100%;box-sizing:border-box;border-radius:14px;border:1px solid #d2d2d7;background:#fff;color:#1d1d1f;font:400 16px Inter,system-ui,sans-serif;letter-spacing:-0.02em;outline:none;transition:border-color .2s, box-shadow .2s;height:auto;min-height:140px;padding:14px 16px;line-height:1.45;resize:vertical" style-focus="border-color:oklch(var(--acc-lo));box-shadow:0 0 0 4px oklch(var(--acc) / 0.18)"></textarea>
           </label>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:12px">
             <label style="display:flex;flex-direction:column;gap:8px">
               <span style="font-size:13px;font-weight:500;letter-spacing:-0.01em;color:#6e6e73">{{ t.name }}</span>
-              <input value="{{ name }}" onChange="{{ onName }}" placeholder="{{ t.namePh }}" autocomplete="name" style="width:100%;box-sizing:border-box;height:50px;padding:0 16px;border-radius:14px;border:1px solid #d2d2d7;background:#fff;color:#1d1d1f;font:400 16px Inter,system-ui,sans-serif;letter-spacing:-0.02em;outline:none;transition:border-color .2s, box-shadow .2s" style-focus="border-color:oklch(0.62 0.17 152);box-shadow:0 0 0 4px oklch(0.8 0.2 152 / 0.18)">
+              <input value="{{ name }}" onChange="{{ onName }}" placeholder="{{ t.namePh }}" autocomplete="name" style="width:100%;box-sizing:border-box;height:50px;padding:0 16px;border-radius:14px;border:1px solid #d2d2d7;background:#fff;color:#1d1d1f;font:400 16px Inter,system-ui,sans-serif;letter-spacing:-0.02em;outline:none;transition:border-color .2s, box-shadow .2s" style-focus="border-color:oklch(var(--acc-lo));box-shadow:0 0 0 4px oklch(var(--acc) / 0.18)">
             </label>
             <label style="display:flex;flex-direction:column;gap:8px">
               <span style="font-size:13px;font-weight:500;letter-spacing:-0.01em;color:#6e6e73">Email</span>
-              <input type="email" value="{{ email }}" onChange="{{ onEmail }}" placeholder="{{ t.emailPh }}" autocomplete="email" style="width:100%;box-sizing:border-box;height:50px;padding:0 16px;border-radius:14px;border:1px solid #d2d2d7;background:#fff;color:#1d1d1f;font:400 16px Inter,system-ui,sans-serif;letter-spacing:-0.02em;outline:none;transition:border-color .2s, box-shadow .2s" style-focus="border-color:oklch(0.62 0.17 152);box-shadow:0 0 0 4px oklch(0.8 0.2 152 / 0.18)">
+              <input type="email" value="{{ email }}" onChange="{{ onEmail }}" placeholder="{{ t.emailPh }}" autocomplete="email" style="width:100%;box-sizing:border-box;height:50px;padding:0 16px;border-radius:14px;border:1px solid #d2d2d7;background:#fff;color:#1d1d1f;font:400 16px Inter,system-ui,sans-serif;letter-spacing:-0.02em;outline:none;transition:border-color .2s, box-shadow .2s" style-focus="border-color:oklch(var(--acc-lo));box-shadow:0 0 0 4px oklch(var(--acc) / 0.18)">
             </label>
           </div>
           <sc-if value="{{ hasErr }}" hint-placeholder-val="{{ false }}">
@@ -403,14 +407,14 @@ a{color:#f5f5f7;text-decoration:none}a:hover{color:#fff}
           <input type="checkbox" name="botcheck" onChange="{{ onBot }}" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
           <button type="submit" style="opacity:{{ sendOpacity }};align-self:flex-start;display:flex;align-items:center;gap:10px;height:50px;padding:0 20px 0 24px;border:0;border-radius:999px;background:#1d1d1f;color:#fff;font:500 16px Inter,system-ui,sans-serif;letter-spacing:-0.03em;cursor:pointer;transition:transform .2s, background .2s" style-hover="background:#000;transform:scale(1.03)" style-active="transform:scale(0.98)">
             <span>{{ sendLabel }}</span>
-            <span style="display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:oklch(0.8 0.2 152);color:#000;font-size:13px;letter-spacing:0">→</span>
+            <span style="display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:oklch(var(--acc));color:#000;font-size:13px;letter-spacing:0">→</span>
           </button>
           <p style="margin:0;max-width:420px;font-size:12.5px;line-height:1.45;letter-spacing:-0.01em;color:#86868b;text-wrap:pretty">{{ t.privacy }}</p>
         </form>
       </sc-if>
       <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
         <div style="min-height:380px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:14px">
-          <span style="display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background:oklch(0.8 0.2 152);color:#000;font-size:22px;letter-spacing:0">✓</span>
+          <span style="display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background:oklch(var(--acc));color:#000;font-size:22px;letter-spacing:0">✓</span>
           <h3 style="margin:0;font-size:clamp(28px,3vw,40px);line-height:1.05;font-weight:600;letter-spacing:-0.045em;color:#1d1d1f">{{ t.thanks }}{{ thanksName }}.</h3>
           <p style="margin:0;max-width:380px;font-size:17px;line-height:1.5;letter-spacing:-0.02em;color:#6e6e73">{{ t.onItsWay }}</p>
           <button type="button" onClick="{{ resetForm }}" style="margin-top:6px;height:40px;padding:0 16px;border-radius:999px;border:1px solid #d2d2d7;background:#fff;color:#1d1d1f;font:500 14px Inter,system-ui,sans-serif;letter-spacing:-0.02em;cursor:pointer" style-hover="background:#f5f5f7">{{ t.sendAnother }}</button>
@@ -444,6 +448,13 @@ class Component extends DCLogic {
   }
   // Slider 0–100 → glow multiplier 0.25–1.8 (50 → 1, the original look)
   haloFactor() { const v = this.state.haloLevel ?? 50; return v <= 50 ? 0.25 + 0.75 * (v / 50) : 1 + 0.8 * ((v - 50) / 50); }
+  // Site accent follows the halo only for red (green otherwise)
+  applyAccent() {
+    const red = this.tone().key === 'red';
+    if ((document.documentElement.getAttribute('data-accent') === 'red') !== red) {
+      if (red) document.documentElement.setAttribute('data-accent', 'red'); else document.documentElement.removeAttribute('data-accent');
+    }
+  }
   setHalo(patch) {
     try { for (const k in patch) localStorage.setItem(k, String(patch[k])); } catch (_) {}
     this.dirty = true;
@@ -579,6 +590,7 @@ class Component extends DCLogic {
   }
 
   componentDidMount() {
+    this.applyAccent();
     this.applyDocLang(this.state.lang);
     this.onResize = () => { this.m = null; this.dirty = true; this.setState({ w: window.innerWidth }); this.kick(); };
     this.onScroll = () => { if (this.state.menuOpen || this.state.haloOpen) this.setState({ menuOpen: false, haloOpen: false }); this.kick(); this.trackScroll(); };
@@ -604,7 +616,7 @@ class Component extends DCLogic {
     } else this.loadCaptcha();
     this.kick();
   }
-  componentDidUpdate() { this.dirty = true; this.renderCaptcha(); this.kick(); }
+  componentDidUpdate() { this.applyAccent(); this.dirty = true; this.renderCaptcha(); this.kick(); }
   loadCaptcha() {
     window.__hcReady = () => { window.__hcLoaded = true; this.renderCaptcha(); };
     if (window.__hcLoaded && window.hcaptcha) return this.renderCaptcha();
@@ -1102,7 +1114,7 @@ class Component extends DCLogic {
     const on = '#f5f5f7', off = 'transparent';
     const r = k2 => this.r(k2);
     const lang = this.state.lang, T = this.I18N[lang];
-    const t = { ...T, words: T.words.map(w => ({ text: w.text, color: w.hl ? 'oklch(0.62 0.17 152)' : 'inherit' })) };
+    const t = { ...T, words: T.words.map(w => ({ text: w.text, color: w.hl ? 'oklch(var(--acc-lo))' : 'inherit' })) };
     const segOn = '#f5f5f7', segOff = 'transparent';
     return {
       t, isEn: lang === 'en', isEs: lang === 'es',
